@@ -1,0 +1,13 @@
+section .data:
+    a: 1
+    b: 0
+section .text:
+    push a
+    push b
+    cmp
+    jz .1
+    lit 2
+    halt
+    .1:
+        lit 1
+        halt

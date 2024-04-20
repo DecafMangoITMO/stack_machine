@@ -1,13 +1,27 @@
 section .data:
-    a: 1
-    b: 0
+    hello: "Hello"
+    pointer: hello
 section .text:
-    push a
-    push b
-    cmp
-    jz .1
-    lit 2
-    halt
-    .1:
-        lit 1
+    .loop:
+        lit pointer
+        push
+        push
+        lit 0
+        cmp
+        jz .end
+        drop
+        lit out
+        pop
+        lit pointer
+        dup
+        push
+        inc
+        over
+        pop
+        drop
+        jmp .loop
+    .end:
         halt
+        
+
+    

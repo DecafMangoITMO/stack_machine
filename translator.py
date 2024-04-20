@@ -119,13 +119,14 @@ def translate_command(line: str, labels: dict[str, int], variables: dict[str, Va
 
     if opcode in [Opcode.JMP, Opcode.JZ]:
         return Command(opcode, labels[parts[1]])
-    elif opcode in [Opcode.PUSH, Opcode.POP]:
-        return Command(opcode, variables[parts[1]].address)
     elif opcode == Opcode.LIT:
-        value = int(parts[1])
-        assert (
-            MIN_NUMBER <= value <= MAX_NUMBER
-        ), f"Value {value} is out of bound"
+        if is_integer(parts[1]):
+            value = int(parts[1])
+            assert (
+                MIN_NUMBER <= value <= MAX_NUMBER
+            ), f"Value {value} is out of bound"
+        else:
+            value = variables[parts[1]].address
         return Command(opcode, value)
     else:
         return Command(opcode)

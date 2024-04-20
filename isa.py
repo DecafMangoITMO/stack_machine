@@ -23,17 +23,21 @@ class Opcode(Enum):
     MUL = ("mul", "00011")
     DIV = ("div", "00100")
     MOD = ("mod", "00101")
-    CMP = ("cmp", "00110")
-    JMP = ("jmp", "00111")
-    JZ = ("jz", "01000")
-    LIT = ("lit", "01001")
-    PUSH = ("push", "01010")
-    POP = ("pop", "01011")
-    DROP = ("drop", "01100")
-    EI = ("ei", "01101")
-    DI = ("di", "01110")
-    IRET = ("iret", "01111")
-    HALT = ("halt", "10000")
+    INC = ("inc", "00110")
+    DEC = ("dec", "00111")
+    DUP = ("dup", "01000")
+    OVER = ("over", "01001")
+    CMP = ("cmp", "01010")
+    JMP = ("jmp", "01011")
+    JZ = ("jz", "01100")
+    LIT = ("lit", "01101")
+    PUSH = ("push", "01110")
+    POP = ("pop", "01111")
+    DROP = ("drop", "10000")
+    EI = ("ei", "10001")
+    DI = ("di", "10010")
+    IRET = ("iret", "10011")
+    HALT = ("halt", "10100")
 
     def __init__(self, mnemonic: str, binary: str):
         self.mnemonic = mnemonic
@@ -93,4 +97,3 @@ def binary32_to_int(value: str) -> int:
 def int_to_opcode(value: int) -> Opcode:
     value = value_to_binary32(value)[:5]
     return Opcode.from_binary(value)
-

@@ -1,19 +1,19 @@
-import sys
 import re
+import sys
 
 from isa import (
-    MAX_NUMBER,
-    MIN_NUMBER,
-    MEMORY_SIZE,
     INPUT_PORT_ADDRESS,
+    MAX_NUMBER,
+    MEMORY_SIZE,
+    MIN_NUMBER,
     OUTPUT_PORT_ADDRESS,
-    Variable,
-    Opcode,
     Command,
-    write_commented_code,
-    write_code,
-    value_to_binary32,
+    Opcode,
+    Variable,
     command_to_binary32,
+    value_to_binary32,
+    write_code,
+    write_commented_code,
 )
 
 SECTION_DATA = "section .data:"
@@ -43,19 +43,17 @@ def clean_source(source: str) -> str:
 
 
 def is_integer(value: str) -> bool:
-    return bool((re.fullmatch(r"^-?\d+$", value)))
+    return bool(re.fullmatch(r"^-?\d+$", value))
 
 
 def is_string(value: str) -> bool:
-    return bool((re.fullmatch(r"^(\".*\")|(\'.*\')$", value)))
+    return bool(re.fullmatch(r"^(\".*\")|(\'.*\')$", value))
 
 
 # Cтадия обработки секции data - выделение памяти под константы, строки, буфферы и переменные-ссылки
-def translate_section_data(
-    section_data: str, address: int, variables: dict[str, Variable]
-) -> tuple[dict[str, Variable], int]:
+def translate_section_data(section_data, address, variables):
     lines = section_data.splitlines()
-    reference_variables: dict[str, str] = {}
+    reference_variables = {}
 
     for line in lines:
         name, value = map(str.strip, line.split(":", 1))
@@ -94,9 +92,9 @@ def translate_section_data(
 
 
 # Первая стадия обработки секции text - выделение меток и их удаление
-def translate_section_text_stage_1(section_text: str, address: int) -> tuple[str, dict[str, int]]:
+def translate_section_text_stage_1(section_text, address):
     lines = section_text.splitlines()
-    labels: dict[str, int] = {}
+    labels = {}
     commands = []
 
     for line in lines:
@@ -111,26 +109,25 @@ def translate_section_text_stage_1(section_text: str, address: int) -> tuple[str
     return "\n".join(commands), labels
 
 
-def translate_command(line: str, labels: dict[str, int], variables: dict[str, Variable]) -> Command:
+def translate_command(line, labels, variables):
     parts = line.split(" ")
     opcode = Opcode.from_string(parts[0])
 
     if opcode in [Opcode.JMP, Opcode.JZ, Opcode.JNZ, Opcode.CALL]:
         return Command(opcode, labels[parts[1]])
-    elif opcode == Opcode.LIT:
+    if opcode == Opcode.LIT:
         if is_integer(parts[1]):
             value = int(parts[1])
             assert MIN_NUMBER <= value <= MAX_NUMBER, f"Value {value} is out of bound"
         else:
             value = variables[parts[1]].address
         return Command(opcode, value)
-    else:
-        return Command(opcode)
+    return Command(opcode)
 
 
-def translate_section_text_stage_2(section_text: str, labels: dict[str, int], variables: dict[str, Variable]):
+def translate_section_text_stage_2(section_text, labels, variables):
     lines = section_text.splitlines()
-    commands: list[Command] = []
+    commands = []
 
     for line in lines:
         commands.append(translate_command(line, labels, variables))
@@ -138,37 +135,7 @@ def translate_section_text_stage_2(section_text: str, labels: dict[str, int], va
     return commands
 
 
-def translate_source(source: str) -> tuple[str, str]:
-    section_data_index = source.find(SECTION_DATA)
-    section_text_index = source.find(SECTION_TEXT)
-    section_data = source[section_data_index + len(SECTION_DATA) + 1 : section_text_index]
-    section_text = source[section_text_index + len(SECTION_TEXT) + 1 :]
-
-    variables = {
-        "in": Variable("in", INPUT_PORT_ADDRESS, [0], False),
-        "out": Variable("out", OUTPUT_PORT_ADDRESS, [0], False),
-    }
-
-    variables, section_text_address = translate_section_data(section_data, 4, variables)
-    section_text, labels = translate_section_text_stage_1(section_text, section_text_address)
-    commands = translate_section_text_stage_2(section_text, labels, variables)
-
-    char_for_index = len(
-        str(section_text_address + 2 * len(commands))
-    )  # Нужно для выравнивания индексов машинных слов в коде с комментариями
-
-    code: list[str] = [value_to_binary32(section_text_address)]
-    commented_code: list[str] = [f"0{" " * (char_for_index - 1)} {value_to_binary32(section_text_address)}"]
-
-    if INTERRUPTION_1 in labels:
-        code.append(value_to_binary32(labels[INTERRUPTION_1]))
-        commented_code.append(f"1{" " * (char_for_index - 1)} {value_to_binary32(labels[INTERRUPTION_1])}")
-    else:
-        code.append(value_to_binary32(0))
-        commented_code.append(f"1{" " * (char_for_index - 1)} {value_to_binary32(0)}")
-
-    address = 2
-
+def translate_variables(variables, address, code, commented_code, char_for_index):
     for variable in variables.values():
         if variable.name in ["in", "out"]:
             code.append(value_to_binary32(0))
@@ -192,18 +159,57 @@ def translate_source(source: str) -> tuple[str, str]:
                     f"{address}{" " * (char_for_index - len(str(address)))} {value_to_binary32(cell)} {cell}"
                 )
             address += 1
+    return code, commented_code, address
+
+
+def translate_commands(commands, address, code, commented_code, char_for_index):
     for command in commands:
         code.append(command_to_binary32(command))
         commented_code.append(
             f"{address}{" " * (char_for_index - len(str(address)))} {command_to_binary32(command)} {command.opcode.mnemonic}"
         )
         address += 1
-        if command.operand != None:
+        if command.operand is not None:
             code.append(value_to_binary32(command.operand))
             commented_code.append(
                 f"{address}{" " * (char_for_index - len(str(address)))} {value_to_binary32(command.operand)} {command.operand}"
             )
             address += 1
+    return code, commented_code, address
+
+
+def translate_source(source):
+    section_data_index = source.find(SECTION_DATA)
+    section_text_index = source.find(SECTION_TEXT)
+    section_data = source[section_data_index + len(SECTION_DATA) + 1 : section_text_index]
+    section_text = source[section_text_index + len(SECTION_TEXT) + 1 :]
+
+    variables = {
+        "in": Variable("in", INPUT_PORT_ADDRESS, [0], False),
+        "out": Variable("out", OUTPUT_PORT_ADDRESS, [0], False),
+    }
+
+    variables, section_text_address = translate_section_data(section_data, 4, variables)
+    section_text, labels = translate_section_text_stage_1(section_text, section_text_address)
+    commands = translate_section_text_stage_2(section_text, labels, variables)
+
+    char_for_index = len(
+        str(section_text_address + 2 * len(commands))
+    )  # Нужно для выравнивания индексов машинных слов в коде с комментариями
+
+    code = [value_to_binary32(section_text_address)]
+    commented_code = [f"0{" " * (char_for_index - 1)} {value_to_binary32(section_text_address)}"]
+
+    if INTERRUPTION_1 in labels:
+        code.append(value_to_binary32(labels[INTERRUPTION_1]))
+        commented_code.append(f"1{" " * (char_for_index - 1)} {value_to_binary32(labels[INTERRUPTION_1])}")
+    else:
+        code.append(value_to_binary32(0))
+        commented_code.append(f"1{" " * (char_for_index - 1)} {value_to_binary32(0)}")
+
+    address = 2
+    code, commented_code, address = translate_variables(variables, address, code, commented_code, char_for_index)
+    code, commented_code, address = translate_commands(commands, address, code, commented_code, char_for_index)
 
     assert address < MEMORY_SIZE, "This programm is too big for processor's memory"
 
@@ -211,7 +217,7 @@ def translate_source(source: str) -> tuple[str, str]:
 
 
 def main(source, target):
-    with open(source, mode="r", encoding="utf-8") as f:
+    with open(source, encoding="utf-8") as f:
         source = f.read()
 
     source = clean_source(source)

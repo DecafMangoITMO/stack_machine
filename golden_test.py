@@ -33,7 +33,7 @@ def test_translator_and_machine(golden, caplog):
             code = f.read()
             code = str(code, encoding="utf-8")
 
-        with open(commented_target, mode="r", encoding="utf-8") as f:
+        with open(commented_target, encoding="utf-8") as f:
             commented_code = f.read()
 
         assert code == golden.out["out_code"]

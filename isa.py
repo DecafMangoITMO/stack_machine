@@ -10,7 +10,7 @@ OUTPUT_PORT_ADDRESS = 3
 
 
 class Variable:
-    def __init__(self, name: str, address: int, data: list[int], is_string: bool):
+    def __init__(self, name, address, data, is_string):
         self.name = name
         self.address = address
         self.data = data
@@ -53,14 +53,14 @@ class Opcode(Enum):
         for opcode in cls:
             if opcode.mnemonic == value:
                 return opcode
-        raise ValueError(f"{value} is unknown command")
+        return None
 
     @classmethod
     def from_binary(cls, value):
         for opcode in cls:
             if opcode.binary == value:
                 return opcode
-        raise ValueError(f"{value} is unknown command")
+        return None
 
 
 class Command:
@@ -79,7 +79,7 @@ def write_code(filename: str, code: str):
         f.write(code.encode("utf-8"))
 
 
-def read_code(filename: str) -> list[int]:
+def read_code(filename):
     with open(filename, mode="rb") as f:
         code = f.read()
         code = str(code, encoding="utf-8").splitlines()

@@ -1,34 +1,30 @@
 import logging
 import sys
 
-from typing import Callable
-
 from isa import (
-    MAX_NUMBER,
-    MIN_NUMBER,
-    MEMORY_SIZE,
-    STACK_SIZE,
     INPUT_PORT_ADDRESS,
+    MAX_NUMBER,
+    MEMORY_SIZE,
+    MIN_NUMBER,
     OUTPUT_PORT_ADDRESS,
+    STACK_SIZE,
     Opcode,
-    read_code,
     int_to_opcode,
+    read_code,
 )
 
 INSTRUCTION_LIMIT = 2000
 
-
-ALU_OPCODE_BINARY_HANDLERS: dict[Opcode, Callable[[int, int], int]] = {
-    Opcode.ADD: lambda left, right: int((left + right)),
-    Opcode.SUB: lambda left, right: int((left - right)),
-    Opcode.MUL: lambda left, right: int((left * right)),
-    Opcode.DIV: lambda left, right: int((left / right)),
-    Opcode.MOD: lambda left, right: int((left % right)),
-    Opcode.CMP: lambda left, right: int((left - right)),
+ALU_OPCODE_BINARY_HANDLERS = {
+    Opcode.ADD: lambda left, right: int(left + right),
+    Opcode.SUB: lambda left, right: int(left - right),
+    Opcode.MUL: lambda left, right: int(left * right),
+    Opcode.DIV: lambda left, right: int(left / right),
+    Opcode.MOD: lambda left, right: int(left % right),
+    Opcode.CMP: lambda left, right: int(left - right),
 }
 
-
-ALU_OPCODE_SINGLE_HANDLERS: dict[Opcode, Callable[[int], int]] = {
+ALU_OPCODE_SINGLE_HANDLERS = {
     Opcode.INC: lambda left: left + 1,
     Opcode.DEC: lambda left: left - 1,
 }
@@ -83,35 +79,35 @@ class Alu:
 
 
 class DataPath:
-    data_stack: list[int] = None
+    data_stack = None
 
-    data_stack_top_1: int = None
+    data_stack_top_1 = None
 
-    data_stack_top_2: int = None
+    data_stack_top_2 = None
 
-    data_stack_size: int = None
+    data_stack_size = None
 
-    address_stack: list[int] = None
+    address_stack = None
 
-    address_stack_top: int = None
+    address_stack_top = None
 
-    address_stack_size: int = None
+    address_stack_size = None
 
-    pc: int = None
+    pc = None
 
-    memory: list[int] = None
+    memory = None
 
-    memory_size: int = None
+    memory_size = None
 
     alu: Alu = None
 
-    input_buffer: int = None
+    input_buffer = None
 
-    output_buffer: list[str] = None
+    output_buffer = None
 
     interruption_controller: InterruptionController = None
 
-    def __init__(self, memory: list[int]):
+    def __init__(self, memory):
         self.data_stack = []
         self.data_stack_top_1 = 0
         self.data_stack_top_2 = 0
@@ -177,9 +173,8 @@ class DataPath:
         if address == INPUT_PORT_ADDRESS:
             logging.debug("input: %s", repr(chr(self.input_buffer)))
             return self.input_buffer
-        else:
-            assert address < self.memory_size, f"Memory doesn't have cell with index {address}"
-            return self.memory[address]
+        assert address < self.memory_size, f"Memory doesn't have cell with index {address}"
+        return self.memory[address]
 
 
 class ControlUnit:
@@ -195,11 +190,33 @@ class ControlUnit:
 
     current_operand: int = None
 
+    instruction_executors = None
+
     def __init__(self, data_path: DataPath):
         self.tick_counter = 0
         self.interruption_enabled = False
         self.handling_interruption = False
         self.data_path = data_path
+        self.instruction_executors = {
+            Opcode.ADD: self.execute_binary_math_instruction,
+            Opcode.SUB: self.execute_binary_math_instruction,
+            Opcode.MUL: self.execute_binary_math_instruction,
+            Opcode.DIV: self.execute_binary_math_instruction,
+            Opcode.MOD: self.execute_binary_math_instruction,
+            Opcode.INC: self.execute_unary_math_instruction,
+            Opcode.DEC: self.execute_binary_math_instruction,
+            Opcode.DUP: self.execute_dup,
+            Opcode.OVER: self.execute_over,
+            Opcode.SWITCH: self.execute_switch,
+            Opcode.CMP: self.execute_cmp,
+            Opcode.LIT: self.execute_lit,
+            Opcode.PUSH: self.execute_push,
+            Opcode.POP: self.execute_pop,
+            Opcode.DROP: self.execute_drop,
+            Opcode.EI: self.execute_ei,
+            Opcode.DI: self.execute_di,
+            Opcode.IRET: self.execute_iret,
+        }
 
     def tick(self):
         self.tick_counter += 1
@@ -237,11 +254,39 @@ class ControlUnit:
         logging.debug("START HANDLING INTERRUPTION")
         return
 
-    def decode_and_execute_control_flow_instruction(self, opcode: Opcode) -> bool:
+    def decode_and_execute_control_flow_instruction(self, opcode):
         if opcode == Opcode.HALT:
-            logging.debug("%s", self.__repr__())
-            raise StopIteration()
+            self.execute_halt()
         if opcode == Opcode.JMP:
+            return self.execute_jmp()
+        if opcode == Opcode.JZ:
+            return self.execute_jz()
+        if opcode == Opcode.JNZ:
+            return self.execute_jnz()
+        if opcode == Opcode.CALL:
+            return self.execute_call()
+        if opcode == Opcode.RET:
+            return self.execute_ret()
+        return False
+
+    def execute_halt(self):
+        logging.debug("%s", self.__repr__())
+        raise StopIteration()
+
+    def execute_jmp(self):
+        address = self.data_path.signal_read_memory(self.data_path.pc)
+        self.data_path.signal_latch_data_stack_top_1(address)
+        self.tick()
+
+        self.data_path.pc = address
+        self.tick()
+
+        self.current_operand = address
+        logging.debug("%s", self.__repr__())
+        return True
+
+    def execute_jz(self):
+        if self.data_path.alu.z_flag:
             address = self.data_path.signal_read_memory(self.data_path.pc)
             self.data_path.signal_latch_data_stack_top_1(address)
             self.tick()
@@ -252,73 +297,62 @@ class ControlUnit:
             self.current_operand = address
             logging.debug("%s", self.__repr__())
             return True
-        if opcode == Opcode.JZ:
-            if self.data_path.alu.z_flag:
-                address = self.data_path.signal_read_memory(self.data_path.pc)
-                self.data_path.signal_latch_data_stack_top_1(address)
-                self.tick()
 
-                self.data_path.pc = address
-                self.tick()
+        self.data_path.signal_latch_pc(self.data_path.pc + 1)
+        self.tick()
 
-                self.current_operand = address
-                logging.debug("%s", self.__repr__())
-                return True
-            else:
-                self.data_path.signal_latch_pc(self.data_path.pc + 1)
-                self.tick()
+        self.current_operand = self.data_path.memory[self.data_path.pc - 1]
+        logging.debug("%s", self.__repr__())
+        return True
 
-                self.current_operand = self.data_path.memory[self.data_path.pc - 1]
-                logging.debug("%s", self.__repr__())
-                return True
-        if opcode == Opcode.JNZ:
-            if not self.data_path.alu.z_flag:
-                address = self.data_path.signal_read_memory(self.data_path.pc)
-                self.data_path.signal_latch_data_stack_top_1(address)
-                self.tick()
-
-                self.data_path.pc = address
-                self.tick()
-
-                self.current_operand = address
-                logging.debug("%s", self.__repr__())
-                return True
-            else:
-                self.data_path.signal_latch_pc(self.data_path.pc + 1)
-                self.tick()
-
-                self.current_operand = self.data_path.memory[self.data_path.pc - 1]
-                logging.debug("%s", self.__repr__())
-                return True
-        if opcode == Opcode.CALL:
+    def execute_jnz(self):
+        if not self.data_path.alu.z_flag:
             address = self.data_path.signal_read_memory(self.data_path.pc)
             self.data_path.signal_latch_data_stack_top_1(address)
             self.tick()
 
-            self.data_path.signal_latch_pc(self.data_path.pc + 1)
-            self.tick()
-
-            self.data_path.signal_latch_address_stack_top(self.data_path.pc)
-            self.tick()
-
-            self.data_path.signal_latch_pc(self.data_path.data_stack_top_1)
-            self.data_path.signal_write_address_stack(self.data_path.address_stack_top)
+            self.data_path.pc = address
             self.tick()
 
             self.current_operand = address
             logging.debug("%s", self.__repr__())
             return True
-        if opcode == Opcode.RET:
-            self.data_path.signal_latch_address_stack_top(self.data_path.signal_read_address_stack())
-            self.tick()
 
-            self.data_path.signal_latch_pc(self.data_path.address_stack_top)
-            self.tick()
+        self.data_path.signal_latch_pc(self.data_path.pc + 1)
+        self.tick()
 
-            logging.debug("%s", self.__repr__())
-            return True
+        self.current_operand = self.data_path.memory[self.data_path.pc - 1]
+        logging.debug("%s", self.__repr__())
+        return True
 
-        return False
+    def execute_call(self):
+        address = self.data_path.signal_read_memory(self.data_path.pc)
+        self.data_path.signal_latch_data_stack_top_1(address)
+        self.tick()
+
+        self.data_path.signal_latch_pc(self.data_path.pc + 1)
+        self.tick()
+
+        self.data_path.signal_latch_address_stack_top(self.data_path.pc)
+        self.tick()
+
+        self.data_path.signal_latch_pc(self.data_path.data_stack_top_1)
+        self.data_path.signal_write_address_stack(self.data_path.address_stack_top)
+        self.tick()
+
+        self.current_operand = address
+        logging.debug("%s", self.__repr__())
+        return True
+
+    def execute_ret(self):
+        self.data_path.signal_latch_address_stack_top(self.data_path.signal_read_address_stack())
+        self.tick()
+
+        self.data_path.signal_latch_pc(self.data_path.address_stack_top)
+        self.tick()
+
+        logging.debug("%s", self.__repr__())
+        return True
 
     def decode_and_execute_instruction(self):
         instruction = self.data_path.signal_read_memory(self.data_path.pc)
@@ -335,193 +369,190 @@ class ControlUnit:
         if opcode == Opcode.NOP:
             logging.debug("%s", self.__repr__())
             return
-        if opcode in [Opcode.ADD, Opcode.SUB, Opcode.MUL, Opcode.DIV, Opcode.MOD]:
-            operand1 = self.data_path.signal_read_data_stack()
-            self.data_path.signal_latch_data_stack_top_1(operand1)
-            self.tick()
 
-            operand2 = self.data_path.signal_read_data_stack()
-            self.data_path.signal_latch_data_stack_top_2(operand2)
-            self.tick()
+        instruction_executor = self.instruction_executors[opcode]
+        instruction_executor(opcode)
 
-            result = self.data_path.alu.perform(
-                self.data_path.data_stack_top_1, self.data_path.data_stack_top_2, opcode
-            )
-            self.data_path.signal_latch_data_stack_top_1(result)
-            self.tick()
+    def execute_binary_math_instruction(self, opcode):
+        operand1 = self.data_path.signal_read_data_stack()
+        self.data_path.signal_latch_data_stack_top_1(operand1)
+        self.tick()
 
-            self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
-            self.tick()
+        operand2 = self.data_path.signal_read_data_stack()
+        self.data_path.signal_latch_data_stack_top_2(operand2)
+        self.tick()
 
-            logging.debug("%s", self.__repr__())
+        result = self.data_path.alu.perform(self.data_path.data_stack_top_1, self.data_path.data_stack_top_2, opcode)
+        self.data_path.signal_latch_data_stack_top_1(result)
+        self.tick()
+
+        self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
+        self.tick()
+
+        logging.debug("%s", self.__repr__())
+
+    def execute_unary_math_instruction(self, opcode):
+        operand = self.data_path.signal_read_data_stack()
+        self.data_path.signal_latch_data_stack_top_1(operand)
+        self.tick()
+
+        result = self.data_path.alu.perform(self.data_path.data_stack_top_1, self.data_path.data_stack_top_2, opcode)
+        self.data_path.signal_latch_data_stack_top_1(result)
+        self.tick()
+
+        self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
+
+        logging.debug("%s", self.__repr__())
+
+    def execute_dup(self, opcode):
+        operand = self.data_path.signal_read_data_stack()
+        self.data_path.signal_latch_data_stack_top_1(operand)
+        self.tick()
+
+        self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
+        self.tick()
+
+        self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
+        self.tick()
+
+        logging.debug("%s", self.__repr__())
+
+    def execute_over(self, opcode):
+        operand1 = self.data_path.signal_read_data_stack()
+        self.data_path.signal_latch_data_stack_top_1(operand1)
+        self.tick()
+
+        operand2 = self.data_path.signal_read_data_stack()
+        self.data_path.signal_latch_data_stack_top_2(operand2)
+        self.tick()
+
+        self.data_path.signal_write_data_stack(self.data_path.data_stack_top_2)
+        self.tick()
+
+        self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
+        self.tick()
+
+        self.data_path.signal_write_data_stack(self.data_path.data_stack_top_2)
+        self.tick()
+
+        logging.debug("%s", self.__repr__())
+
+    def execute_switch(self, opcode):
+        self.data_path.signal_latch_data_stack_top_1(self.data_path.signal_read_data_stack())
+        self.tick()
+
+        self.data_path.signal_latch_data_stack_top_2(self.data_path.signal_read_data_stack())
+        self.tick()
+
+        self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
+        self.tick()
+
+        self.data_path.signal_write_data_stack(self.data_path.data_stack_top_2)
+        self.tick()
+
+        logging.debug("%s", self.__repr__())
+
+    def execute_cmp(self, opcode):
+        operand1 = self.data_path.signal_read_data_stack()
+        self.data_path.signal_latch_data_stack_top_1(operand1)
+        self.tick()
+
+        operand2 = self.data_path.signal_read_data_stack()
+        self.data_path.signal_latch_data_stack_top_2(operand2)
+        self.tick()
+
+        self.data_path.alu.perform(self.data_path.data_stack_top_1, self.data_path.data_stack_top_2, Opcode.CMP)
+        self.data_path.signal_write_data_stack(self.data_path.data_stack_top_2)
+        self.tick()
+
+        self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
+        self.tick()
+
+        logging.debug("%s", self.__repr__())
+
+    def execute_lit(self, opcode):
+        self.data_path.signal_latch_data_stack_top_1(self.data_path.signal_read_memory(self.data_path.pc))
+        self.tick()
+
+        self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
+        self.data_path.signal_latch_pc(self.data_path.pc + 1)
+        self.tick()
+
+        self.current_operand = self.data_path.data_stack[-1]
+        logging.debug("%s", self.__repr__())
+
+    def execute_push(self, opcode):
+        address = self.data_path.signal_read_data_stack()
+        self.data_path.signal_latch_data_stack_top_1(address)
+        self.data_path.signal_latch_address_stack_top(self.data_path.pc)
+        self.tick()
+
+        self.data_path.signal_latch_pc(self.data_path.data_stack_top_1)
+        self.tick()
+
+        self.data_path.signal_latch_data_stack_top_1(self.data_path.signal_read_memory(self.data_path.pc))
+        self.tick()
+
+        self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
+        self.data_path.signal_latch_pc(self.data_path.address_stack_top)
+        self.tick()
+
+        logging.debug("%s", self.__repr__())
+
+    def execute_pop(self, opcode):
+        address = self.data_path.signal_read_data_stack()
+        self.data_path.signal_latch_data_stack_top_1(address)
+        self.tick()
+
+        operand = self.data_path.signal_read_data_stack()
+        self.data_path.signal_latch_data_stack_top_2(operand)
+        self.data_path.signal_latch_address_stack_top(self.data_path.pc)
+        self.tick()
+
+        self.data_path.signal_latch_pc(self.data_path.data_stack_top_1)
+        self.tick()
+
+        self.data_path.signal_write_memory(self.data_path.pc, self.data_path.data_stack_top_2)
+        self.tick()
+
+        self.data_path.signal_latch_pc(self.data_path.address_stack_top)
+        self.tick()
+
+        logging.debug("%s", self.__repr__())
+
+    def execute_drop(self, opcode):
+        self.data_path.signal_latch_data_stack_top_1(self.data_path.signal_read_data_stack())
+        self.tick()
+
+        logging.debug("%s", self.__repr__())
+
+    def execute_ei(self, opcode):
+        self.interruption_enabled = True
+        self.tick()
+
+        logging.debug("%s", self.__repr__())
+
+    def execute_di(self, opcode):
+        self.interruption_enabled = False
+        self.tick()
+
+        logging.debug("%s", self.__repr__())
+
+    def execute_iret(self, opcode):
+        if not self.handling_interruption:
             return
-        if opcode in [Opcode.INC, Opcode.DEC]:
-            operand = self.data_path.signal_read_data_stack()
-            self.data_path.signal_latch_data_stack_top_1(operand)
-            self.tick()
 
-            result = self.data_path.alu.perform(
-                self.data_path.data_stack_top_1, self.data_path.data_stack_top_2, opcode
-            )
-            self.data_path.signal_latch_data_stack_top_1(result)
-            self.tick()
+        address = self.data_path.signal_read_address_stack()
+        self.data_path.signal_latch_address_stack_top(address)
+        self.tick()
 
-            self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
+        self.data_path.signal_latch_pc(self.data_path.address_stack_top)
+        self.handling_interruption = False
+        self.data_path.interruption_controller.interruption = False
+        self.tick()
 
-            logging.debug("%s", self.__repr__())
-            return
-        if opcode == Opcode.DUP:
-            operand = self.data_path.signal_read_data_stack()
-            self.data_path.signal_latch_data_stack_top_1(operand)
-            self.tick()
-
-            self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
-            self.tick()
-
-            self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
-            self.tick()
-
-            logging.debug("%s", self.__repr__())
-            return
-        if opcode == Opcode.OVER:
-            operand1 = self.data_path.signal_read_data_stack()
-            self.data_path.signal_latch_data_stack_top_1(operand1)
-            self.tick()
-
-            operand2 = self.data_path.signal_read_data_stack()
-            self.data_path.signal_latch_data_stack_top_2(operand2)
-            self.tick()
-
-            self.data_path.signal_write_data_stack(self.data_path.data_stack_top_2)
-            self.tick()
-
-            self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
-            self.tick()
-
-            self.data_path.signal_write_data_stack(self.data_path.data_stack_top_2)
-            self.tick()
-
-            logging.debug("%s", self.__repr__())
-            return
-        if opcode == Opcode.SWITCH:
-            self.data_path.signal_latch_data_stack_top_1(self.data_path.signal_read_data_stack())
-            self.tick()
-
-            self.data_path.signal_latch_data_stack_top_2(self.data_path.signal_read_data_stack())
-            self.tick()
-
-            self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
-            self.tick()
-
-            self.data_path.signal_write_data_stack(self.data_path.data_stack_top_2)
-            self.tick()
-
-            logging.debug("%s", self.__repr__())
-            return
-        if opcode == Opcode.CMP:
-            operand1 = self.data_path.signal_read_data_stack()
-            self.data_path.signal_latch_data_stack_top_1(operand1)
-            self.tick()
-
-            operand2 = self.data_path.signal_read_data_stack()
-            self.data_path.signal_latch_data_stack_top_2(operand2)
-            self.tick()
-
-            result = self.data_path.alu.perform(
-                self.data_path.data_stack_top_1, self.data_path.data_stack_top_2, opcode
-            )
-            self.data_path.signal_write_data_stack(self.data_path.data_stack_top_2)
-            self.tick()
-
-            self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
-            self.tick()
-
-            logging.debug("%s", self.__repr__())
-            return
-        if opcode == Opcode.LIT:
-            self.data_path.signal_latch_data_stack_top_1(self.data_path.signal_read_memory(self.data_path.pc))
-            self.tick()
-
-            self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
-            self.data_path.signal_latch_pc(self.data_path.pc + 1)
-            self.tick()
-
-            self.current_operand = self.data_path.data_stack[-1]
-            logging.debug("%s", self.__repr__())
-            return
-        if opcode == Opcode.PUSH:
-            address = self.data_path.signal_read_data_stack()
-            self.data_path.signal_latch_data_stack_top_1(address)
-            self.data_path.signal_latch_address_stack_top(self.data_path.pc)
-            self.tick()
-
-            self.data_path.signal_latch_pc(self.data_path.data_stack_top_1)
-            self.tick()
-
-            self.data_path.signal_latch_data_stack_top_1(self.data_path.signal_read_memory(self.data_path.pc))
-            self.tick()
-
-            self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
-            self.data_path.signal_latch_pc(self.data_path.address_stack_top)
-            self.tick()
-
-            logging.debug("%s", self.__repr__())
-            return
-        if opcode == Opcode.POP:
-            address = self.data_path.signal_read_data_stack()
-            self.data_path.signal_latch_data_stack_top_1(address)
-            self.tick()
-
-            operand = self.data_path.signal_read_data_stack()
-            self.data_path.signal_latch_data_stack_top_2(operand)
-            self.data_path.signal_latch_address_stack_top(self.data_path.pc)
-            self.tick()
-
-            self.data_path.signal_latch_pc(self.data_path.data_stack_top_1)
-            self.tick()
-
-            self.data_path.signal_write_memory(self.data_path.pc, self.data_path.data_stack_top_2)
-            self.tick()
-
-            self.data_path.signal_latch_pc(self.data_path.address_stack_top)
-            self.tick()
-
-            logging.debug("%s", self.__repr__())
-            return
-        if opcode == Opcode.DROP:
-            self.data_path.signal_latch_data_stack_top_1(self.data_path.signal_read_data_stack())
-            self.tick()
-
-            logging.debug("%s", self.__repr__())
-            return
-        if opcode == Opcode.EI:
-            self.interruption_enabled = True
-            self.tick()
-
-            logging.debug("%s", self.__repr__())
-            return
-        if opcode == Opcode.DI:
-            self.interruption_enabled = False
-            self.tick()
-
-            logging.debug("%s", self.__repr__())
-            return
-        if opcode == Opcode.IRET:
-            if not self.handling_interruption:
-                return
-
-            address = self.data_path.signal_read_address_stack()
-            self.data_path.signal_latch_address_stack_top(address)
-            self.tick()
-
-            self.data_path.signal_latch_pc(self.data_path.address_stack_top)
-            self.handling_interruption = False
-            self.data_path.interruption_controller.interruption = False
-            self.tick()
-
-            logging.debug("%s", self.__repr__())
-            logging.debug("STOP HANDLING INTERRUPTION")
-            return
+        logging.debug("%s", self.__repr__())
+        logging.debug("STOP HANDLING INTERRUPTION")
 
     def __repr__(self) -> str:
         registers_repr = "TICK: {:10} PC: {:10} TODS1: {:10} TODS2: {:10} TOAS: {:10} Z_FLAG: {:1}".format(
@@ -538,13 +569,27 @@ class ControlUnit:
 
         instruction_repr = self.current_instruction.mnemonic
 
-        if self.current_operand != None:
+        if self.current_operand is not None:
             instruction_repr += " {}".format(self.current_operand)
 
         return "{} \t{}\n\t   {}\n\t   {}".format(registers_repr, instruction_repr, data_stack_repr, address_stack_repr)
 
 
-def simulation(code: list[int], input_tokens: list[tuple[int, str]]) -> tuple[list[str], int, int]:
+def initiate_interruption(control_unit, input_tokens):
+    if len(input_tokens) != 0:
+        if not control_unit.data_path.interruption_controller.interruption:
+            next_token = input_tokens[0]
+            if control_unit.tick_counter >= next_token[0]:
+                control_unit.data_path.interruption_controller.generate_interruption(1)
+                if next_token[1]:
+                    control_unit.data_path.input_buffer = ord(next_token[1])
+                else:
+                    control_unit.data_path.input_buffer = 0
+                return input_tokens[1:]
+    return input_tokens
+
+
+def simulation(code, input_tokens):
     data_path = DataPath(code)
     control_unit = ControlUnit(data_path)
 
@@ -553,17 +598,7 @@ def simulation(code: list[int], input_tokens: list[tuple[int, str]]) -> tuple[li
     instruction_counter = 0
     try:
         while instruction_counter < INSTRUCTION_LIMIT:
-            if len(input_tokens) != 0:
-                if not data_path.interruption_controller.interruption:
-                    next_token = input_tokens[0]
-                    if control_unit.tick_counter >= next_token[0]:
-                        data_path.interruption_controller.generate_interruption(1)
-                        if next_token[1]:
-                            data_path.input_buffer = ord(next_token[1])
-                        else:
-                            data_path.input_buffer = 0
-                        input_tokens = input_tokens[1:]
-
+            input_tokens = initiate_interruption(control_unit, input_tokens)
             control_unit.check_and_handle_interruption()
             control_unit.decode_and_execute_instruction()
             instruction_counter += 1
@@ -578,7 +613,7 @@ def simulation(code: list[int], input_tokens: list[tuple[int, str]]) -> tuple[li
 
 def main(code_file: str, input_file: str):
     code = read_code(code_file)
-    with open(input_file, mode="r", encoding="utf-8") as f:
+    with open(input_file, encoding="utf-8") as f:
         input_text = f.read().strip()
         if not input_text:
             input_tokens = []

@@ -1,10 +1,18 @@
 section .data:
-    num1: 1
-    num2: 1
 section .text:
-    lit num1
-    push
-    lit num2
-    push
-    add
-    halt
+    ei
+    .loop:
+        jmp .loop
+    
+    .int1:
+        lit in 
+        push
+        lit 0
+        cmp
+        drop
+        jnz .cont
+        halt
+    .cont:
+        lit out
+        pop
+        iret

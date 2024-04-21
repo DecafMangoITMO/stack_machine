@@ -563,7 +563,7 @@ def simulation(code: list[int], input_tokens: list[tuple[str, int]]) -> tuple[li
     instruction_counter = 0
     try:
         while instruction_counter < INSTRUCTION_LIMIT:
-            print(data_path.memory[:6])
+            print(data_path.memory[:14])
             if len(input_tokens) != 0:
                 next_token = input_tokens[0]
                 if control_unit.tick_counter >= next_token[0]:

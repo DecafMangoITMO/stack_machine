@@ -3,7 +3,7 @@ from enum import Enum
 MEMORY_SIZE = 2048
 STACK_SIZE = 1024
 MAX_NUMBER = 1 << 31 - 1
-MIN_NUMBER = - (1 << 31)
+MIN_NUMBER = -(1 << 31)
 INT1_ADDRESS = 1
 INPUT_PORT_ADDRESS = 2
 OUTPUT_PORT_ADDRESS = 3
@@ -54,7 +54,7 @@ class Opcode(Enum):
             if opcode.mnemonic == value:
                 return opcode
         raise ValueError(f"{value} is unknown command")
-    
+
     @classmethod
     def from_binary(cls, value):
         for opcode in cls:
@@ -98,7 +98,7 @@ def command_to_binary32(command: Command) -> str:
 def binary32_to_int(value: str) -> int:
     num = int(value, 2)
     if value[0] == "1":
-        num -= (1 << 32)
+        num -= 1 << 32
     return num
 
 

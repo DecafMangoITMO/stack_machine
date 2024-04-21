@@ -8,11 +8,11 @@ from isa import (
     MIN_NUMBER,
     MEMORY_SIZE,
     STACK_SIZE,
-    INPUT_PORT_ADDRESS, 
+    INPUT_PORT_ADDRESS,
     OUTPUT_PORT_ADDRESS,
     Opcode,
-    read_code, 
-    int_to_opcode
+    read_code,
+    int_to_opcode,
 )
 
 INSTRUCTION_LIMIT = 2000
@@ -22,15 +22,15 @@ ALU_OPCODE_BINARY_HANDLERS: dict[Opcode, Callable[[int, int], int]] = {
     Opcode.ADD: lambda left, right: int((left + right)),
     Opcode.SUB: lambda left, right: int((left - right)),
     Opcode.MUL: lambda left, right: int((left * right)),
-    Opcode.DIV: lambda left, right: int((left / right)), 
+    Opcode.DIV: lambda left, right: int((left / right)),
     Opcode.MOD: lambda left, right: int((left % right)),
-    Opcode.CMP: lambda left, right: int((left - right))
+    Opcode.CMP: lambda left, right: int((left - right)),
 }
 
 
 ALU_OPCODE_SINGLE_HANDLERS: dict[Opcode, Callable[[int], int]] = {
     Opcode.INC: lambda left: left + 1,
-    Opcode.DEC: lambda left: left - 1
+    Opcode.DEC: lambda left: left - 1,
 }
 
 
@@ -43,15 +43,12 @@ class InterruptionController:
         self.interruption_number = 0
 
     def generate_interruption(self, number: int) -> None:
-        assert (
-            number == 1
-        ), f"Interruption controller doesn't invoke interruption-{number}"
+        assert number == 1, f"Interruption controller doesn't invoke interruption-{number}"
         self.interruption = True
         self.interruption_number = number
 
 
 class Alu:
-
     z_flag = None
 
     def __init__(self):
@@ -86,7 +83,6 @@ class Alu:
 
 
 class DataPath:
-
     data_stack: list[int] = None
 
     data_stack_top_1: int = None
@@ -116,7 +112,7 @@ class DataPath:
     interruption_controller: InterruptionController = None
 
     def __init__(self, memory: list[int]):
-        self.data_stack = [] 
+        self.data_stack = []
         self.data_stack_top_1 = 0
         self.data_stack_top_2 = 0
         self.data_stack_size = STACK_SIZE
@@ -145,32 +141,24 @@ class DataPath:
         self.data_stack_top_2 = value
 
     def signal_write_data_stack(self, value: int) -> None:
-        assert (
-            len(self.data_stack) != self.data_stack_size - 1
-        ), "Data stack is overflowed"
+        assert len(self.data_stack) != self.data_stack_size - 1, "Data stack is overflowed"
         self.data_stack.append(value)
 
     def signal_read_data_stack(self) -> int:
-        assert (
-            len(self.data_stack) != 0
-        ), "Data stack is empty"
+        assert len(self.data_stack) != 0, "Data stack is empty"
         return self.data_stack.pop()
-    
+
     def signal_latch_address_stack_top(self, value: int) -> None:
         self.address_stack_top = value
 
     def signal_write_address_stack(self, value: int) -> None:
-        assert (
-            len(self.address_stack) != self.address_stack_size - 1
-        ), "Address stack is overflowed"
+        assert len(self.address_stack) != self.address_stack_size - 1, "Address stack is overflowed"
         self.address_stack.append(value)
 
     def signal_read_address_stack(self) -> int:
-        assert (
-            len(self.address_stack) != 0
-        ), "Address stack is empty"
+        assert len(self.address_stack) != 0, "Address stack is empty"
         return self.address_stack.pop()
-    
+
     def signal_latch_pc(self, value: int) -> None:
         self.pc = value
 
@@ -181,10 +169,8 @@ class DataPath:
             character = chr(value)
             logging.debug("output: %s << %s", repr("".join(self.output_buffer)), repr(character))
             self.output_buffer.append(character)
-        else: 
-            assert (
-                address < self.memory_size
-            ), f"Memory doesn't have cell with index {address}"
+        else:
+            assert address < self.memory_size, f"Memory doesn't have cell with index {address}"
             self.memory[address] = value
 
     def signal_read_memory(self, address: int) -> int:
@@ -192,20 +178,17 @@ class DataPath:
             logging.debug("input: %s", repr(chr(self.input_buffer)))
             return self.input_buffer
         else:
-            assert (
-                address < self.memory_size
-            ), f"Memory doesn't have cell with index {address}"
+            assert address < self.memory_size, f"Memory doesn't have cell with index {address}"
             return self.memory[address]
-        
+
 
 class ControlUnit:
-
     tick_counter: int = None
 
     interruption_enabled: bool = None
 
     handling_interruption: bool = None
-    
+
     data_path: DataPath = None
 
     current_instruction: Opcode = None
@@ -217,7 +200,7 @@ class ControlUnit:
         self.interruption_enabled = False
         self.handling_interruption = False
         self.data_path = data_path
-    
+
     def tick(self):
         self.tick_counter += 1
 
@@ -235,7 +218,7 @@ class ControlUnit:
             return
         if self.handling_interruption:
             return
-        
+
         self.handling_interruption = True
         self.data_path.signal_latch_address_stack_top(self.data_path.pc)
         self.tick()
@@ -254,7 +237,7 @@ class ControlUnit:
         logging.debug("START HANDLING INTERRUPTION")
         return
 
-    def decode_and_execute_control_flow_instruction(self, opcode: Opcode) -> bool: 
+    def decode_and_execute_control_flow_instruction(self, opcode: Opcode) -> bool:
         if opcode == Opcode.HALT:
             logging.debug("%s", self.__repr__())
             raise StopIteration()
@@ -284,7 +267,7 @@ class ControlUnit:
             else:
                 self.data_path.signal_latch_pc(self.data_path.pc + 1)
                 self.tick()
-                
+
                 self.current_operand = self.data_path.memory[self.data_path.pc - 1]
                 logging.debug("%s", self.__repr__())
                 return True
@@ -303,7 +286,7 @@ class ControlUnit:
             else:
                 self.data_path.signal_latch_pc(self.data_path.pc + 1)
                 self.tick()
-                
+
                 self.current_operand = self.data_path.memory[self.data_path.pc - 1]
                 logging.debug("%s", self.__repr__())
                 return True
@@ -348,7 +331,7 @@ class ControlUnit:
         self.current_operand = None
         if self.decode_and_execute_control_flow_instruction(opcode):
             return
-        
+
         if opcode == Opcode.NOP:
             logging.debug("%s", self.__repr__())
             return
@@ -361,7 +344,9 @@ class ControlUnit:
             self.data_path.signal_latch_data_stack_top_2(operand2)
             self.tick()
 
-            result = self.data_path.alu.perform(self.data_path.data_stack_top_1, self.data_path.data_stack_top_2, opcode)
+            result = self.data_path.alu.perform(
+                self.data_path.data_stack_top_1, self.data_path.data_stack_top_2, opcode
+            )
             self.data_path.signal_latch_data_stack_top_1(result)
             self.tick()
 
@@ -375,7 +360,9 @@ class ControlUnit:
             self.data_path.signal_latch_data_stack_top_1(operand)
             self.tick()
 
-            result = self.data_path.alu.perform(self.data_path.data_stack_top_1, self.data_path.data_stack_top_2, opcode)
+            result = self.data_path.alu.perform(
+                self.data_path.data_stack_top_1, self.data_path.data_stack_top_2, opcode
+            )
             self.data_path.signal_latch_data_stack_top_1(result)
             self.tick()
 
@@ -394,7 +381,7 @@ class ControlUnit:
             self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
             self.tick()
 
-            logging.debug("%s", self.__repr__())    
+            logging.debug("%s", self.__repr__())
             return
         if opcode == Opcode.OVER:
             operand1 = self.data_path.signal_read_data_stack()
@@ -413,7 +400,7 @@ class ControlUnit:
 
             self.data_path.signal_write_data_stack(self.data_path.data_stack_top_2)
             self.tick()
-            
+
             logging.debug("%s", self.__repr__())
             return
         if opcode == Opcode.SWITCH:
@@ -440,7 +427,9 @@ class ControlUnit:
             self.data_path.signal_latch_data_stack_top_2(operand2)
             self.tick()
 
-            result = self.data_path.alu.perform(self.data_path.data_stack_top_1, self.data_path.data_stack_top_2, opcode)
+            result = self.data_path.alu.perform(
+                self.data_path.data_stack_top_1, self.data_path.data_stack_top_2, opcode
+            )
             self.data_path.signal_write_data_stack(self.data_path.data_stack_top_2)
             self.tick()
 
@@ -477,7 +466,7 @@ class ControlUnit:
             self.tick()
 
             logging.debug("%s", self.__repr__())
-            return            
+            return
         if opcode == Opcode.POP:
             address = self.data_path.signal_read_data_stack()
             self.data_path.signal_latch_data_stack_top_1(address)
@@ -498,7 +487,7 @@ class ControlUnit:
             self.tick()
 
             logging.debug("%s", self.__repr__())
-            return     
+            return
         if opcode == Opcode.DROP:
             self.data_path.signal_latch_data_stack_top_1(self.data_path.signal_read_data_stack())
             self.tick()
@@ -520,7 +509,7 @@ class ControlUnit:
         if opcode == Opcode.IRET:
             if not self.handling_interruption:
                 return
-             
+
             address = self.data_path.signal_read_address_stack()
             self.data_path.signal_latch_address_stack_top(address)
             self.tick()
@@ -533,7 +522,7 @@ class ControlUnit:
             logging.debug("%s", self.__repr__())
             logging.debug("STOP HANDLING INTERRUPTION")
             return
-        
+
     def __repr__(self) -> str:
         registers_repr = "TICK: {:10} PC: {:10} TODS1: {:10} TODS2: {:10} TOAS: {:10} Z_FLAG: {:1}".format(
             str(self.tick_counter),
@@ -541,7 +530,7 @@ class ControlUnit:
             str(self.data_path.data_stack_top_1),
             str(self.data_path.data_stack_top_2),
             str(self.data_path.address_stack_top),
-            int(self.data_path.alu.z_flag)
+            int(self.data_path.alu.z_flag),
         )
 
         data_stack_repr = "DATA_STACK: {}".format(self.data_path.data_stack)
@@ -553,12 +542,12 @@ class ControlUnit:
             instruction_repr += " {}".format(self.current_operand)
 
         return "{} \t{}\n\t   {}\n\t   {}".format(registers_repr, instruction_repr, data_stack_repr, address_stack_repr)
-    
+
 
 def simulation(code: list[int], input_tokens: list[tuple[int, str]]) -> tuple[list[str], int, int]:
     data_path = DataPath(code)
     control_unit = ControlUnit(data_path)
-    
+
     control_unit.initialization_cycle()
 
     instruction_counter = 0
@@ -583,7 +572,7 @@ def simulation(code: list[int], input_tokens: list[tuple[int, str]]) -> tuple[li
 
     if instruction_counter == INSTRUCTION_LIMIT:
         logging.warning("Instruction limit reached")
-    
+
     return data_path.output_buffer, instruction_counter, control_unit.tick_counter
 
 
@@ -604,8 +593,6 @@ def main(code_file: str, input_file: str):
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.DEBUG)
-    assert (
-        len(sys.argv) == 3
-    ), "Invalid usage: python3 machine.py <code_file> <input_file>"
+    assert len(sys.argv) == 3, "Invalid usage: python3 machine.py <code_file> <input_file>"
     _, code_file, input_file = sys.argv
     main(code_file, input_file)

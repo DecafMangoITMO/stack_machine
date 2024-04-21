@@ -1,0 +1,58 @@
+section .data:
+    num1: 1
+    num2: 1
+section .text:
+    lit num1
+    push
+    call .print_num
+
+    .loop:
+        call .print_space
+        lit num2
+        push
+        dup
+        dup
+        call .print_num
+        lit num1
+        push
+        add
+        lit num2
+        pop
+        lit num1
+        pop
+        jmp .loop
+
+    .print_num:
+        lit -1
+        switch
+        .loop1:
+            dup
+            lit 10
+            switch 
+            mod 
+            lit 48
+            add
+            switch
+            lit 10
+            switch
+            div
+            jnz .loop1
+        drop
+        .loop2:
+            lit -1
+            cmp 
+            jz .stop1
+            drop
+            lit out
+            pop
+            jmp .loop2            
+        .stop1:
+            drop
+            drop
+            ret    
+
+    .print_space:
+        lit 32
+        lit out
+        pop
+        ret

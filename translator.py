@@ -117,7 +117,7 @@ def translate_command(line: str, labels: dict[str, int], variables: dict[str, Va
     parts = line.split(" ")
     opcode = Opcode.from_string(parts[0])
 
-    if opcode in [Opcode.JMP, Opcode.JZ]:
+    if opcode in [Opcode.JMP, Opcode.JZ, Opcode.JNZ,  Opcode.CALL]:
         return Command(opcode, labels[parts[1]])
     elif opcode == Opcode.LIT:
         if is_integer(parts[1]):

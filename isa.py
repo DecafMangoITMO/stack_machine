@@ -102,6 +102,7 @@ def binary32_to_int(value: str) -> int:
     return num
 
 
+
 def int_to_opcode(value: int) -> Opcode:
     value = value_to_binary32(value)[:5]
     return Opcode.from_binary(value)

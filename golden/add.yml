@@ -48,21 +48,21 @@ out_stdout: |
 
   instr_counter: 5 ticks: 30
 out_log: |
-  DEBUG   machine:decode_and_execute_instruction TICK: 6          PC: 8          TODS1: 4          TODS2: 0          TOAS: 0          Z_FLAG: 0 	lit 4
+  DEBUG   machine:execute_lit   TICK: 6          PC: 8          TODS1: 4          TODS2: 0          TOAS: 0          Z_FLAG: 0 	lit 4
   	   DATA_STACK: [4]
   	   ADDRESS_STACK: []
-  DEBUG   machine:decode_and_execute_instruction TICK: 12         PC: 9          TODS1: 1          TODS2: 0          TOAS: 9          Z_FLAG: 0 	push
+  DEBUG   machine:execute_push  TICK: 12         PC: 9          TODS1: 1          TODS2: 0          TOAS: 9          Z_FLAG: 0 	push
   	   DATA_STACK: [1]
   	   ADDRESS_STACK: []
-  DEBUG   machine:decode_and_execute_instruction TICK: 16         PC: 11         TODS1: 5          TODS2: 0          TOAS: 9          Z_FLAG: 0 	lit 5
+  DEBUG   machine:execute_lit   TICK: 16         PC: 11         TODS1: 5          TODS2: 0          TOAS: 9          Z_FLAG: 0 	lit 5
   	   DATA_STACK: [1, 5]
   	   ADDRESS_STACK: []
-  DEBUG   machine:decode_and_execute_instruction TICK: 22         PC: 12         TODS1: 1          TODS2: 0          TOAS: 12         Z_FLAG: 0 	push
+  DEBUG   machine:execute_push  TICK: 22         PC: 12         TODS1: 1          TODS2: 0          TOAS: 12         Z_FLAG: 0 	push
   	   DATA_STACK: [1, 1]
   	   ADDRESS_STACK: []
-  DEBUG   machine:decode_and_execute_instruction TICK: 28         PC: 13         TODS1: 2          TODS2: 1          TOAS: 12         Z_FLAG: 0 	add
+  DEBUG   machine:execute_binary_math_instruction TICK: 28         PC: 13         TODS1: 2          TODS2: 1          TOAS: 12         Z_FLAG: 0 	add
   	   DATA_STACK: [2]
   	   ADDRESS_STACK: []
-  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 30         PC: 14         TODS1: 2          TODS2: 1          TOAS: 12         Z_FLAG: 0 	halt
+  DEBUG   machine:execute_halt  TICK: 30         PC: 14         TODS1: 2          TODS2: 1          TOAS: 12         Z_FLAG: 0 	halt
   	   DATA_STACK: [2]
   	   ADDRESS_STACK: []

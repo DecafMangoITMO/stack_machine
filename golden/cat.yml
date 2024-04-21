@@ -1,0 +1,891 @@
+in_source: |
+  section .data:
+  section .text:
+    ei
+    .loop:
+        jmp .loop
+
+    .int1:
+        lit in
+        push
+        lit 0
+        cmp
+        jz .stop
+        drop
+        lit out
+        pop
+        iret
+        .stop:
+            halt
+in_stdin: |-
+  [(1, 'D'), (100, 'e'), (200, 'c'), (300, 'a'), (400, 'f'), (500, 'M'), (600, 'a'), (700, 'n'), (800, 'g'), (1000, 'o'), (1100, '')]
+out_code: |-
+  00000000000000000000000000000100
+  00000000000000000000000000000111
+  00000000000000000000000000000000
+  00000000000000000000000000000000
+  10101000000000000000000000000000
+  01100000000000000000000000000000
+  00000000000000000000000000000101
+  10001000000000000000000000000000
+  00000000000000000000000000000010
+  10010000000000000000000000000000
+  10001000000000000000000000000000
+  00000000000000000000000000000000
+  01011000000000000000000000000000
+  01101000000000000000000000000000
+  00000000000000000000000000010100
+  10100000000000000000000000000000
+  10001000000000000000000000000000
+  00000000000000000000000000000011
+  10011000000000000000000000000000
+  10111000000000000000000000000000
+  11000000000000000000000000000000
+out_commented_code: |-
+  0  00000000000000000000000000000100
+  1  00000000000000000000000000000111
+  2  00000000000000000000000000000000
+  3  00000000000000000000000000000000
+  4  10101000000000000000000000000000 ei
+  5  01100000000000000000000000000000 jmp
+  6  00000000000000000000000000000101 5
+  7  10001000000000000000000000000000 lit
+  8  00000000000000000000000000000010 2
+  9  10010000000000000000000000000000 push
+  10 10001000000000000000000000000000 lit
+  11 00000000000000000000000000000000 0
+  12 01011000000000000000000000000000 cmp
+  13 01101000000000000000000000000000 jz
+  14 00000000000000000000000000010100 20
+  15 10100000000000000000000000000000 drop
+  16 10001000000000000000000000000000 lit
+  17 00000000000000000000000000000011 3
+  18 10011000000000000000000000000000 pop
+  19 10111000000000000000000000000000 iret
+  20 11000000000000000000000000000000 halt
+out_stdout: |
+  source LoC: 17 code instr: 21
+  ============================================================
+  DecafMango
+
+  instr_counter: 258 ticks: 1133
+out_log: |
+  DEBUG   machine:decode_and_execute_instruction TICK: 5          PC: 5          TODS1: 4          TODS2: 0          TOAS: 0          Z_FLAG: 0 	ei
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:check_and_handle_interruption START HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_instruction TICK: 13         PC: 9          TODS1: 2          TODS2: 0          TOAS: 5          Z_FLAG: 0 	lit 2
+  	   DATA_STACK: [2]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_read_memory input: 'D'
+  DEBUG   machine:decode_and_execute_instruction TICK: 19         PC: 10         TODS1: 68         TODS2: 0          TOAS: 10         Z_FLAG: 0 	push
+  	   DATA_STACK: [68]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 23         PC: 12         TODS1: 0          TODS2: 0          TOAS: 10         Z_FLAG: 0 	lit 0
+  	   DATA_STACK: [68, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 29         PC: 13         TODS1: 0          TODS2: 68         TOAS: 10         Z_FLAG: 0 	cmp
+  	   DATA_STACK: [68, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 32         PC: 15         TODS1: 0          TODS2: 68         TOAS: 10         Z_FLAG: 0 	jz 20
+  	   DATA_STACK: [68, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 35         PC: 16         TODS1: 0          TODS2: 68         TOAS: 10         Z_FLAG: 0 	drop
+  	   DATA_STACK: [68]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 39         PC: 18         TODS1: 3          TODS2: 68         TOAS: 10         Z_FLAG: 0 	lit 3
+  	   DATA_STACK: [68, 3]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_write_memory output: '' << 'D'
+  DEBUG   machine:decode_and_execute_instruction TICK: 46         PC: 19         TODS1: 3          TODS2: 68         TOAS: 19         Z_FLAG: 0 	pop
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 50         PC: 5          TODS1: 3          TODS2: 68         TOAS: 5          Z_FLAG: 0 	iret
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_instruction STOP HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 54         PC: 5          TODS1: 5          TODS2: 68         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 58         PC: 5          TODS1: 5          TODS2: 68         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 62         PC: 5          TODS1: 5          TODS2: 68         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 66         PC: 5          TODS1: 5          TODS2: 68         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 70         PC: 5          TODS1: 5          TODS2: 68         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 74         PC: 5          TODS1: 5          TODS2: 68         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 78         PC: 5          TODS1: 5          TODS2: 68         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 82         PC: 5          TODS1: 5          TODS2: 68         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 86         PC: 5          TODS1: 5          TODS2: 68         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 90         PC: 5          TODS1: 5          TODS2: 68         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 94         PC: 5          TODS1: 5          TODS2: 68         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 98         PC: 5          TODS1: 5          TODS2: 68         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 102        PC: 5          TODS1: 5          TODS2: 68         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:check_and_handle_interruption START HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_instruction TICK: 110        PC: 9          TODS1: 2          TODS2: 68         TOAS: 5          Z_FLAG: 0 	lit 2
+  	   DATA_STACK: [2]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_read_memory input: 'e'
+  DEBUG   machine:decode_and_execute_instruction TICK: 116        PC: 10         TODS1: 101        TODS2: 68         TOAS: 10         Z_FLAG: 0 	push
+  	   DATA_STACK: [101]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 120        PC: 12         TODS1: 0          TODS2: 68         TOAS: 10         Z_FLAG: 0 	lit 0
+  	   DATA_STACK: [101, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 126        PC: 13         TODS1: 0          TODS2: 101        TOAS: 10         Z_FLAG: 0 	cmp
+  	   DATA_STACK: [101, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 129        PC: 15         TODS1: 0          TODS2: 101        TOAS: 10         Z_FLAG: 0 	jz 20
+  	   DATA_STACK: [101, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 132        PC: 16         TODS1: 0          TODS2: 101        TOAS: 10         Z_FLAG: 0 	drop
+  	   DATA_STACK: [101]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 136        PC: 18         TODS1: 3          TODS2: 101        TOAS: 10         Z_FLAG: 0 	lit 3
+  	   DATA_STACK: [101, 3]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_write_memory output: 'D' << 'e'
+  DEBUG   machine:decode_and_execute_instruction TICK: 143        PC: 19         TODS1: 3          TODS2: 101        TOAS: 19         Z_FLAG: 0 	pop
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 147        PC: 5          TODS1: 3          TODS2: 101        TOAS: 5          Z_FLAG: 0 	iret
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_instruction STOP HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 151        PC: 5          TODS1: 5          TODS2: 101        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 155        PC: 5          TODS1: 5          TODS2: 101        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 159        PC: 5          TODS1: 5          TODS2: 101        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 163        PC: 5          TODS1: 5          TODS2: 101        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 167        PC: 5          TODS1: 5          TODS2: 101        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 171        PC: 5          TODS1: 5          TODS2: 101        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 175        PC: 5          TODS1: 5          TODS2: 101        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 179        PC: 5          TODS1: 5          TODS2: 101        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 183        PC: 5          TODS1: 5          TODS2: 101        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 187        PC: 5          TODS1: 5          TODS2: 101        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 191        PC: 5          TODS1: 5          TODS2: 101        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 195        PC: 5          TODS1: 5          TODS2: 101        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 199        PC: 5          TODS1: 5          TODS2: 101        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 203        PC: 5          TODS1: 5          TODS2: 101        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:check_and_handle_interruption START HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_instruction TICK: 211        PC: 9          TODS1: 2          TODS2: 101        TOAS: 5          Z_FLAG: 0 	lit 2
+  	   DATA_STACK: [2]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_read_memory input: 'c'
+  DEBUG   machine:decode_and_execute_instruction TICK: 217        PC: 10         TODS1: 99         TODS2: 101        TOAS: 10         Z_FLAG: 0 	push
+  	   DATA_STACK: [99]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 221        PC: 12         TODS1: 0          TODS2: 101        TOAS: 10         Z_FLAG: 0 	lit 0
+  	   DATA_STACK: [99, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 227        PC: 13         TODS1: 0          TODS2: 99         TOAS: 10         Z_FLAG: 0 	cmp
+  	   DATA_STACK: [99, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 230        PC: 15         TODS1: 0          TODS2: 99         TOAS: 10         Z_FLAG: 0 	jz 20
+  	   DATA_STACK: [99, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 233        PC: 16         TODS1: 0          TODS2: 99         TOAS: 10         Z_FLAG: 0 	drop
+  	   DATA_STACK: [99]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 237        PC: 18         TODS1: 3          TODS2: 99         TOAS: 10         Z_FLAG: 0 	lit 3
+  	   DATA_STACK: [99, 3]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_write_memory output: 'De' << 'c'
+  DEBUG   machine:decode_and_execute_instruction TICK: 244        PC: 19         TODS1: 3          TODS2: 99         TOAS: 19         Z_FLAG: 0 	pop
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 248        PC: 5          TODS1: 3          TODS2: 99         TOAS: 5          Z_FLAG: 0 	iret
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_instruction STOP HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 252        PC: 5          TODS1: 5          TODS2: 99         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 256        PC: 5          TODS1: 5          TODS2: 99         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 260        PC: 5          TODS1: 5          TODS2: 99         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 264        PC: 5          TODS1: 5          TODS2: 99         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 268        PC: 5          TODS1: 5          TODS2: 99         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 272        PC: 5          TODS1: 5          TODS2: 99         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 276        PC: 5          TODS1: 5          TODS2: 99         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 280        PC: 5          TODS1: 5          TODS2: 99         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 284        PC: 5          TODS1: 5          TODS2: 99         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 288        PC: 5          TODS1: 5          TODS2: 99         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 292        PC: 5          TODS1: 5          TODS2: 99         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 296        PC: 5          TODS1: 5          TODS2: 99         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 300        PC: 5          TODS1: 5          TODS2: 99         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:check_and_handle_interruption START HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_instruction TICK: 308        PC: 9          TODS1: 2          TODS2: 99         TOAS: 5          Z_FLAG: 0 	lit 2
+  	   DATA_STACK: [2]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_read_memory input: 'a'
+  DEBUG   machine:decode_and_execute_instruction TICK: 314        PC: 10         TODS1: 97         TODS2: 99         TOAS: 10         Z_FLAG: 0 	push
+  	   DATA_STACK: [97]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 318        PC: 12         TODS1: 0          TODS2: 99         TOAS: 10         Z_FLAG: 0 	lit 0
+  	   DATA_STACK: [97, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 324        PC: 13         TODS1: 0          TODS2: 97         TOAS: 10         Z_FLAG: 0 	cmp
+  	   DATA_STACK: [97, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 327        PC: 15         TODS1: 0          TODS2: 97         TOAS: 10         Z_FLAG: 0 	jz 20
+  	   DATA_STACK: [97, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 330        PC: 16         TODS1: 0          TODS2: 97         TOAS: 10         Z_FLAG: 0 	drop
+  	   DATA_STACK: [97]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 334        PC: 18         TODS1: 3          TODS2: 97         TOAS: 10         Z_FLAG: 0 	lit 3
+  	   DATA_STACK: [97, 3]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_write_memory output: 'Dec' << 'a'
+  DEBUG   machine:decode_and_execute_instruction TICK: 341        PC: 19         TODS1: 3          TODS2: 97         TOAS: 19         Z_FLAG: 0 	pop
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 345        PC: 5          TODS1: 3          TODS2: 97         TOAS: 5          Z_FLAG: 0 	iret
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_instruction STOP HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 349        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 353        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 357        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 361        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 365        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 369        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 373        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 377        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 381        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 385        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 389        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 393        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 397        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 401        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:check_and_handle_interruption START HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_instruction TICK: 409        PC: 9          TODS1: 2          TODS2: 97         TOAS: 5          Z_FLAG: 0 	lit 2
+  	   DATA_STACK: [2]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_read_memory input: 'f'
+  DEBUG   machine:decode_and_execute_instruction TICK: 415        PC: 10         TODS1: 102        TODS2: 97         TOAS: 10         Z_FLAG: 0 	push
+  	   DATA_STACK: [102]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 419        PC: 12         TODS1: 0          TODS2: 97         TOAS: 10         Z_FLAG: 0 	lit 0
+  	   DATA_STACK: [102, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 425        PC: 13         TODS1: 0          TODS2: 102        TOAS: 10         Z_FLAG: 0 	cmp
+  	   DATA_STACK: [102, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 428        PC: 15         TODS1: 0          TODS2: 102        TOAS: 10         Z_FLAG: 0 	jz 20
+  	   DATA_STACK: [102, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 431        PC: 16         TODS1: 0          TODS2: 102        TOAS: 10         Z_FLAG: 0 	drop
+  	   DATA_STACK: [102]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 435        PC: 18         TODS1: 3          TODS2: 102        TOAS: 10         Z_FLAG: 0 	lit 3
+  	   DATA_STACK: [102, 3]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_write_memory output: 'Deca' << 'f'
+  DEBUG   machine:decode_and_execute_instruction TICK: 442        PC: 19         TODS1: 3          TODS2: 102        TOAS: 19         Z_FLAG: 0 	pop
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 446        PC: 5          TODS1: 3          TODS2: 102        TOAS: 5          Z_FLAG: 0 	iret
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_instruction STOP HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 450        PC: 5          TODS1: 5          TODS2: 102        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 454        PC: 5          TODS1: 5          TODS2: 102        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 458        PC: 5          TODS1: 5          TODS2: 102        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 462        PC: 5          TODS1: 5          TODS2: 102        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 466        PC: 5          TODS1: 5          TODS2: 102        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 470        PC: 5          TODS1: 5          TODS2: 102        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 474        PC: 5          TODS1: 5          TODS2: 102        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 478        PC: 5          TODS1: 5          TODS2: 102        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 482        PC: 5          TODS1: 5          TODS2: 102        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 486        PC: 5          TODS1: 5          TODS2: 102        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 490        PC: 5          TODS1: 5          TODS2: 102        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 494        PC: 5          TODS1: 5          TODS2: 102        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 498        PC: 5          TODS1: 5          TODS2: 102        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 502        PC: 5          TODS1: 5          TODS2: 102        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:check_and_handle_interruption START HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_instruction TICK: 510        PC: 9          TODS1: 2          TODS2: 102        TOAS: 5          Z_FLAG: 0 	lit 2
+  	   DATA_STACK: [2]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_read_memory input: 'M'
+  DEBUG   machine:decode_and_execute_instruction TICK: 516        PC: 10         TODS1: 77         TODS2: 102        TOAS: 10         Z_FLAG: 0 	push
+  	   DATA_STACK: [77]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 520        PC: 12         TODS1: 0          TODS2: 102        TOAS: 10         Z_FLAG: 0 	lit 0
+  	   DATA_STACK: [77, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 526        PC: 13         TODS1: 0          TODS2: 77         TOAS: 10         Z_FLAG: 0 	cmp
+  	   DATA_STACK: [77, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 529        PC: 15         TODS1: 0          TODS2: 77         TOAS: 10         Z_FLAG: 0 	jz 20
+  	   DATA_STACK: [77, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 532        PC: 16         TODS1: 0          TODS2: 77         TOAS: 10         Z_FLAG: 0 	drop
+  	   DATA_STACK: [77]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 536        PC: 18         TODS1: 3          TODS2: 77         TOAS: 10         Z_FLAG: 0 	lit 3
+  	   DATA_STACK: [77, 3]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_write_memory output: 'Decaf' << 'M'
+  DEBUG   machine:decode_and_execute_instruction TICK: 543        PC: 19         TODS1: 3          TODS2: 77         TOAS: 19         Z_FLAG: 0 	pop
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 547        PC: 5          TODS1: 3          TODS2: 77         TOAS: 5          Z_FLAG: 0 	iret
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_instruction STOP HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 551        PC: 5          TODS1: 5          TODS2: 77         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 555        PC: 5          TODS1: 5          TODS2: 77         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 559        PC: 5          TODS1: 5          TODS2: 77         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 563        PC: 5          TODS1: 5          TODS2: 77         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 567        PC: 5          TODS1: 5          TODS2: 77         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 571        PC: 5          TODS1: 5          TODS2: 77         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 575        PC: 5          TODS1: 5          TODS2: 77         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 579        PC: 5          TODS1: 5          TODS2: 77         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 583        PC: 5          TODS1: 5          TODS2: 77         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 587        PC: 5          TODS1: 5          TODS2: 77         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 591        PC: 5          TODS1: 5          TODS2: 77         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 595        PC: 5          TODS1: 5          TODS2: 77         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 599        PC: 5          TODS1: 5          TODS2: 77         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 603        PC: 5          TODS1: 5          TODS2: 77         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:check_and_handle_interruption START HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_instruction TICK: 611        PC: 9          TODS1: 2          TODS2: 77         TOAS: 5          Z_FLAG: 0 	lit 2
+  	   DATA_STACK: [2]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_read_memory input: 'a'
+  DEBUG   machine:decode_and_execute_instruction TICK: 617        PC: 10         TODS1: 97         TODS2: 77         TOAS: 10         Z_FLAG: 0 	push
+  	   DATA_STACK: [97]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 621        PC: 12         TODS1: 0          TODS2: 77         TOAS: 10         Z_FLAG: 0 	lit 0
+  	   DATA_STACK: [97, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 627        PC: 13         TODS1: 0          TODS2: 97         TOAS: 10         Z_FLAG: 0 	cmp
+  	   DATA_STACK: [97, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 630        PC: 15         TODS1: 0          TODS2: 97         TOAS: 10         Z_FLAG: 0 	jz 20
+  	   DATA_STACK: [97, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 633        PC: 16         TODS1: 0          TODS2: 97         TOAS: 10         Z_FLAG: 0 	drop
+  	   DATA_STACK: [97]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 637        PC: 18         TODS1: 3          TODS2: 97         TOAS: 10         Z_FLAG: 0 	lit 3
+  	   DATA_STACK: [97, 3]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_write_memory output: 'DecafM' << 'a'
+  DEBUG   machine:decode_and_execute_instruction TICK: 644        PC: 19         TODS1: 3          TODS2: 97         TOAS: 19         Z_FLAG: 0 	pop
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 648        PC: 5          TODS1: 3          TODS2: 97         TOAS: 5          Z_FLAG: 0 	iret
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_instruction STOP HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 652        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 656        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 660        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 664        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 668        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 672        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 676        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 680        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 684        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 688        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 692        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 696        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 700        PC: 5          TODS1: 5          TODS2: 97         TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:check_and_handle_interruption START HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_instruction TICK: 708        PC: 9          TODS1: 2          TODS2: 97         TOAS: 5          Z_FLAG: 0 	lit 2
+  	   DATA_STACK: [2]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_read_memory input: 'n'
+  DEBUG   machine:decode_and_execute_instruction TICK: 714        PC: 10         TODS1: 110        TODS2: 97         TOAS: 10         Z_FLAG: 0 	push
+  	   DATA_STACK: [110]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 718        PC: 12         TODS1: 0          TODS2: 97         TOAS: 10         Z_FLAG: 0 	lit 0
+  	   DATA_STACK: [110, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 724        PC: 13         TODS1: 0          TODS2: 110        TOAS: 10         Z_FLAG: 0 	cmp
+  	   DATA_STACK: [110, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 727        PC: 15         TODS1: 0          TODS2: 110        TOAS: 10         Z_FLAG: 0 	jz 20
+  	   DATA_STACK: [110, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 730        PC: 16         TODS1: 0          TODS2: 110        TOAS: 10         Z_FLAG: 0 	drop
+  	   DATA_STACK: [110]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 734        PC: 18         TODS1: 3          TODS2: 110        TOAS: 10         Z_FLAG: 0 	lit 3
+  	   DATA_STACK: [110, 3]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_write_memory output: 'DecafMa' << 'n'
+  DEBUG   machine:decode_and_execute_instruction TICK: 741        PC: 19         TODS1: 3          TODS2: 110        TOAS: 19         Z_FLAG: 0 	pop
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 745        PC: 5          TODS1: 3          TODS2: 110        TOAS: 5          Z_FLAG: 0 	iret
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_instruction STOP HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 749        PC: 5          TODS1: 5          TODS2: 110        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 753        PC: 5          TODS1: 5          TODS2: 110        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 757        PC: 5          TODS1: 5          TODS2: 110        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 761        PC: 5          TODS1: 5          TODS2: 110        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 765        PC: 5          TODS1: 5          TODS2: 110        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 769        PC: 5          TODS1: 5          TODS2: 110        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 773        PC: 5          TODS1: 5          TODS2: 110        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 777        PC: 5          TODS1: 5          TODS2: 110        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 781        PC: 5          TODS1: 5          TODS2: 110        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 785        PC: 5          TODS1: 5          TODS2: 110        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 789        PC: 5          TODS1: 5          TODS2: 110        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 793        PC: 5          TODS1: 5          TODS2: 110        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 797        PC: 5          TODS1: 5          TODS2: 110        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 801        PC: 5          TODS1: 5          TODS2: 110        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:check_and_handle_interruption START HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_instruction TICK: 809        PC: 9          TODS1: 2          TODS2: 110        TOAS: 5          Z_FLAG: 0 	lit 2
+  	   DATA_STACK: [2]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_read_memory input: 'g'
+  DEBUG   machine:decode_and_execute_instruction TICK: 815        PC: 10         TODS1: 103        TODS2: 110        TOAS: 10         Z_FLAG: 0 	push
+  	   DATA_STACK: [103]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 819        PC: 12         TODS1: 0          TODS2: 110        TOAS: 10         Z_FLAG: 0 	lit 0
+  	   DATA_STACK: [103, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 825        PC: 13         TODS1: 0          TODS2: 103        TOAS: 10         Z_FLAG: 0 	cmp
+  	   DATA_STACK: [103, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 828        PC: 15         TODS1: 0          TODS2: 103        TOAS: 10         Z_FLAG: 0 	jz 20
+  	   DATA_STACK: [103, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 831        PC: 16         TODS1: 0          TODS2: 103        TOAS: 10         Z_FLAG: 0 	drop
+  	   DATA_STACK: [103]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 835        PC: 18         TODS1: 3          TODS2: 103        TOAS: 10         Z_FLAG: 0 	lit 3
+  	   DATA_STACK: [103, 3]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_write_memory output: 'DecafMan' << 'g'
+  DEBUG   machine:decode_and_execute_instruction TICK: 842        PC: 19         TODS1: 3          TODS2: 103        TOAS: 19         Z_FLAG: 0 	pop
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 846        PC: 5          TODS1: 3          TODS2: 103        TOAS: 5          Z_FLAG: 0 	iret
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_instruction STOP HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 850        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 854        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 858        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 862        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 866        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 870        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 874        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 878        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 882        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 886        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 890        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 894        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 898        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 902        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 906        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 910        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 914        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 918        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 922        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 926        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 930        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 934        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 938        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 942        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 946        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 950        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 954        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 958        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 962        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 966        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 970        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 974        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 978        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 982        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 986        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 990        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 994        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 998        PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1002       PC: 5          TODS1: 5          TODS2: 103        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:check_and_handle_interruption START HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_instruction TICK: 1010       PC: 9          TODS1: 2          TODS2: 103        TOAS: 5          Z_FLAG: 0 	lit 2
+  	   DATA_STACK: [2]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_read_memory input: 'o'
+  DEBUG   machine:decode_and_execute_instruction TICK: 1016       PC: 10         TODS1: 111        TODS2: 103        TOAS: 10         Z_FLAG: 0 	push
+  	   DATA_STACK: [111]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 1020       PC: 12         TODS1: 0          TODS2: 103        TOAS: 10         Z_FLAG: 0 	lit 0
+  	   DATA_STACK: [111, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 1026       PC: 13         TODS1: 0          TODS2: 111        TOAS: 10         Z_FLAG: 0 	cmp
+  	   DATA_STACK: [111, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1029       PC: 15         TODS1: 0          TODS2: 111        TOAS: 10         Z_FLAG: 0 	jz 20
+  	   DATA_STACK: [111, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 1032       PC: 16         TODS1: 0          TODS2: 111        TOAS: 10         Z_FLAG: 0 	drop
+  	   DATA_STACK: [111]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 1036       PC: 18         TODS1: 3          TODS2: 111        TOAS: 10         Z_FLAG: 0 	lit 3
+  	   DATA_STACK: [111, 3]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_write_memory output: 'DecafMang' << 'o'
+  DEBUG   machine:decode_and_execute_instruction TICK: 1043       PC: 19         TODS1: 3          TODS2: 111        TOAS: 19         Z_FLAG: 0 	pop
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 1047       PC: 5          TODS1: 3          TODS2: 111        TOAS: 5          Z_FLAG: 0 	iret
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_instruction STOP HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1051       PC: 5          TODS1: 5          TODS2: 111        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1055       PC: 5          TODS1: 5          TODS2: 111        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1059       PC: 5          TODS1: 5          TODS2: 111        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1063       PC: 5          TODS1: 5          TODS2: 111        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1067       PC: 5          TODS1: 5          TODS2: 111        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1071       PC: 5          TODS1: 5          TODS2: 111        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1075       PC: 5          TODS1: 5          TODS2: 111        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1079       PC: 5          TODS1: 5          TODS2: 111        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1083       PC: 5          TODS1: 5          TODS2: 111        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1087       PC: 5          TODS1: 5          TODS2: 111        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1091       PC: 5          TODS1: 5          TODS2: 111        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1095       PC: 5          TODS1: 5          TODS2: 111        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1099       PC: 5          TODS1: 5          TODS2: 111        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1103       PC: 5          TODS1: 5          TODS2: 111        TOAS: 5          Z_FLAG: 0 	jmp 5
+  	   DATA_STACK: []
+  	   ADDRESS_STACK: []
+  DEBUG   machine:check_and_handle_interruption START HANDLING INTERRUPTION
+  DEBUG   machine:decode_and_execute_instruction TICK: 1111       PC: 9          TODS1: 2          TODS2: 111        TOAS: 5          Z_FLAG: 0 	lit 2
+  	   DATA_STACK: [2]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:signal_read_memory input: '\x00'
+  DEBUG   machine:decode_and_execute_instruction TICK: 1117       PC: 10         TODS1: 0          TODS2: 111        TOAS: 10         Z_FLAG: 0 	push
+  	   DATA_STACK: [0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 1121       PC: 12         TODS1: 0          TODS2: 111        TOAS: 10         Z_FLAG: 0 	lit 0
+  	   DATA_STACK: [0, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_instruction TICK: 1127       PC: 13         TODS1: 0          TODS2: 0          TOAS: 10         Z_FLAG: 1 	cmp
+  	   DATA_STACK: [0, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1131       PC: 20         TODS1: 20         TODS2: 0          TOAS: 10         Z_FLAG: 1 	jz 20
+  	   DATA_STACK: [0, 0]
+  	   ADDRESS_STACK: [5]
+  DEBUG   machine:decode_and_execute_control_flow_instruction TICK: 1133       PC: 21         TODS1: 20         TODS2: 0          TOAS: 10         Z_FLAG: 1 	halt
+  	   DATA_STACK: [0, 0]
+  	   ADDRESS_STACK: [5]

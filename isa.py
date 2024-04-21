@@ -8,6 +8,7 @@ INT1_ADDRESS = 1
 INPUT_PORT_ADDRESS = 2
 OUTPUT_PORT_ADDRESS = 3
 
+
 class Variable:
     def __init__(self, name: str, address: int, data: list[int], is_string: bool):
         self.name = name
@@ -87,7 +88,7 @@ def read_code(filename: str) -> list[int]:
 
 
 def value_to_binary32(value: int) -> str:
-    return format(value, "032b")
+    return format(value & 0xFFFFFFFF, "032b")
 
 
 def command_to_binary32(command: Command) -> str:
@@ -95,7 +96,10 @@ def command_to_binary32(command: Command) -> str:
 
 
 def binary32_to_int(value: str) -> int:
-    return int(value, 2)
+    num = int(value, 2)
+    if value[0] == "1":
+        num -= (1 << 32)
+    return num
 
 
 def int_to_opcode(value: int) -> Opcode:

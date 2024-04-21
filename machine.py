@@ -1,4 +1,5 @@
-import logging, sys
+import logging
+import sys
 
 from typing import Callable
 
@@ -14,7 +15,7 @@ from isa import (
     int_to_opcode
 )
 
-INSTRUCTION_LIMIT = 10000
+INSTRUCTION_LIMIT = 2000
 
 
 ALU_OPCODE_BINARY_HANDLERS: dict[Opcode, Callable[[int, int], int]] = {
@@ -32,6 +33,7 @@ ALU_OPCODE_SINGLE_HANDLERS: dict[Opcode, Callable[[int], int]] = {
     Opcode.DEC: lambda left: left - 1
 }
 
+
 class InterruptionController:
     interruption: bool = None
     interruption_number: int = None
@@ -46,6 +48,7 @@ class InterruptionController:
         ), f"Interruption controller doesn't invoke interruption-{number}"
         self.interruption = True
         self.interruption_number = number
+
 
 class Alu:
 
@@ -188,8 +191,6 @@ class DataPath:
         if address == INPUT_PORT_ADDRESS:
             logging.debug("input: %s", repr(chr(self.input_buffer)))
             return self.input_buffer
-        elif address == OUTPUT_PORT_ADDRESS:
-            return self.output_buffer
         else:
             assert (
                 address < self.memory_size
@@ -388,10 +389,10 @@ class ControlUnit:
             self.tick()
 
             self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
-            self.tick
+            self.tick()
 
             self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
-            self.tick
+            self.tick()
 
             logging.debug("%s", self.__repr__())    
             return
@@ -554,7 +555,7 @@ class ControlUnit:
         return "{} \t{}\n\t   {}\n\t   {}".format(registers_repr, instruction_repr, data_stack_repr, address_stack_repr)
     
 
-def simulation(code: list[int], input_tokens: list[tuple[str, int]]) -> tuple[list[str], int, int]:
+def simulation(code: list[int], input_tokens: list[tuple[int, str]]) -> tuple[list[str], int, int]:
     data_path = DataPath(code)
     control_unit = ControlUnit(data_path)
     
@@ -563,22 +564,25 @@ def simulation(code: list[int], input_tokens: list[tuple[str, int]]) -> tuple[li
     instruction_counter = 0
     try:
         while instruction_counter < INSTRUCTION_LIMIT:
-            print(data_path.memory[:14])
             if len(input_tokens) != 0:
-                next_token = input_tokens[0]
-                if control_unit.tick_counter >= next_token[0]:
-                    data_path.interruption_controller.generate_interruption(1)
-                    if next_token[1]:
-                        data_path.input_buffer = ord(next_token[1])
-                    else:
-                        data_path.input_buffer = 0
-                    input_tokens = input_tokens[1:]
+                if not data_path.interruption_controller.interruption:
+                    next_token = input_tokens[0]
+                    if control_unit.tick_counter >= next_token[0]:
+                        data_path.interruption_controller.generate_interruption(1)
+                        if next_token[1]:
+                            data_path.input_buffer = ord(next_token[1])
+                        else:
+                            data_path.input_buffer = 0
+                        input_tokens = input_tokens[1:]
 
             control_unit.check_and_handle_interruption()
             control_unit.decode_and_execute_instruction()
             instruction_counter += 1
     except StopIteration:
         pass
+
+    if instruction_counter == INSTRUCTION_LIMIT:
+        logging.warning("Instruction limit reached")
     
     return data_path.output_buffer, instruction_counter, control_unit.tick_counter
 
@@ -594,9 +598,8 @@ def main(code_file: str, input_file: str):
 
     output, instruction_counter, ticks = simulation(code, input_tokens)
 
-    print("output:", "".join(output))
-    print("instruction counter:", instruction_counter)
-    print("ticks:", ticks)
+    print("".join(output) + "\n")
+    print(f"instr_counter: {instruction_counter} ticks: {ticks}")
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-name: Stack-Machine CI
+name: Stack-Machine
 
 on:
   push:

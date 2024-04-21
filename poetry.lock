@@ -10,6 +10,7 @@ files = [
     {file = "atomicwrites-1.4.1.tar.gz", hash = "sha256:81b2c9071a49367a7f770170e5eec8cb66567cfbbc8c73d20ce5ca4a8d71cf11"},
 ]
 
+
 [[package]]
 name = "colorama"
 version = "0.4.6"

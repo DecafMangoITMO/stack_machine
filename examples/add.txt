@@ -1,0 +1,10 @@
+section .data:
+      a: 1
+      b: 1
+  section .text:
+      lit a
+      push
+      lit b
+      push
+      add
+      halt

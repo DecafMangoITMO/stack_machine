@@ -179,6 +179,7 @@ def translate_commands(commands, address, code, commented_code, char_for_index):
 
 
 def translate_source(source):
+    source = clean_source(source)
     section_data_index = source.find(SECTION_DATA)
     section_text_index = source.find(SECTION_TEXT)
     section_data = source[section_data_index + len(SECTION_DATA) + 1 : section_text_index]
@@ -220,7 +221,6 @@ def main(source, target):
     with open(source, encoding="utf-8") as f:
         source = f.read()
 
-    source = clean_source(source)
     code, commented_code = translate_source(source)
 
     write_commented_code(

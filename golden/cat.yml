@@ -64,7 +64,7 @@ out_commented_code: |-
   19 10111000000000000000000000000000 iret
   20 11000000000000000000000000000000 halt
 out_stdout: |
-  source LoC: 17 code instr: 21
+  source LoC: 18 code instr: 21
   ============================================================
   DecafMango
 

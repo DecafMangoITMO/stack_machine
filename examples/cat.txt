@@ -1,0 +1,18 @@
+  section .data:
+  section .text:
+    ei
+    .loop:
+        jmp .loop
+
+    .int1:
+        lit in
+        push
+        lit 0
+        cmp
+        jz .stop
+        drop
+        lit out
+        pop
+        iret
+        .stop:
+            halt

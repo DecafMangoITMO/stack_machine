@@ -401,6 +401,7 @@ class ControlUnit:
         self.tick()
 
         self.data_path.signal_write_data_stack(self.data_path.data_stack_top_1)
+        self.tick()
 
         logging.debug("%s", self.__repr__())
 

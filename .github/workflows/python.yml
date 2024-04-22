@@ -1,4 +1,4 @@
-name: Stack-Machine
+name: Check Python
 
 on:
   push:

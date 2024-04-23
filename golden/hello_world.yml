@@ -1,24 +1,24 @@
 in_source: |
   section .data:
     hello: "Hello world!"
-    pointer: hello
+    pointer: hello ; введем указатель на символ в строке hello (нужно для вывода символов)
   section .text:
     .loop:
-        lit pointer
+        lit pointer 
         push
-        push
+        push ; кладем на стек данных следующий символ строки hello
         lit 0
-        cmp
-        jz .stop
-        drop
-        lit out
-        pop
-        lit pointer
+        cmp ; сравниваем текущий символ с нуль-терминатором
+        jz .stop ; если дошли до конца строки - останов
+        drop 
+        lit out 
+        pop ; передаем текущий символ в порт вывода
+        lit pointer 
         dup
         push
         inc
         switch
-        pop
+        pop ; увеличиваем указатель на единицу
         jmp .loop
     .stop:
         halt

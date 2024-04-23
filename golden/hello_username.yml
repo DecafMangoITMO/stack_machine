@@ -5,13 +5,15 @@ in_source: |
     username: bf 30
     pointer: request
   section .text:
-    call .print_str
-    call .print_n
+    call .print_str ; вывод строки request
+    call .print_n ; вывод символа переноса строки
     lit username
     lit pointer
-    pop
+    pop ; запись в pointer адреса начала буффера username
 
-    lit -1
+
+    ; ожидаем, пока не будет введено полностью имя
+    lit -1  ; на верхушке стека данных при вводе будет лежать последний введенный символ (на нулевой итерации значение -1)
     .loop1:
         di
         lit 0
@@ -25,32 +27,32 @@ in_source: |
         drop
         lit hello
         lit pointer
-        pop
-        call .print_str
-        call .print_space
+        pop ; записываем в pointer адрес начала строки hello
+        call .print_str ;  вывод строки hello
+        call .print_space 
         lit username
         lit pointer
-        pop
-        call .print_str
+        pop ; записываем в pointer адрес начала буффера username
+        call .print_str ; вывод имени пользователя
         halt
 
     .print_str:
         .loop2:
             lit pointer
             push
-            push
+            push ; кладем на стек данных следующий символ
             lit 0
-            cmp
-            jz .stop2
+            cmp 
+            jz .stop2 ; если текущий символ - нуль-терминатор, то прекращаем вывод строки
             drop
             lit out
-            pop
+            pop ; вывод текущего символа в порт вывода
             lit pointer
             dup
             push
             inc
             switch
-            pop
+            pop ; инкремент указателя pointer
             jmp .loop2
         .stop2:
             ret
@@ -61,26 +63,26 @@ in_source: |
         pop
         ret
 
-    .print_n:
+    .print_n: ; вывод символа переноса строки 
         lit 10
         lit out
         pop
         ret
 
-    .int1:
-        drop
+    .int1: ; обработчик прерывания-1 (прерывание на ввод)
+        drop ; удаляем со стека данных предыдуший введенный символ
         lit in
-        push
-        dup
+        push ; кладем символ на стек данных значение из порта ввода 
+        dup 
         lit pointer
         push
-        pop
+        pop ; записываем символ в буффер username
         lit pointer
         dup
-        push
-        inc
+        push ; считываем значение pointer
+        inc ; увеличиваем pointer на единицу
         switch
-        pop
+        pop ; обновляем значение pointer
         iret
 in_stdin: |-
   [(1000, 'D'), (1001, 'e'), (1002, 'c'), (1003, 'a'), (1004, 'f'), (1005, 'M'), (1006, 'a'), (1007, 'n'), (1008, 'g'), (1009, 'o'), (1010, '')]
@@ -387,7 +389,7 @@ out_commented_code: |-
   148 10011000000000000000000000000000 pop
   149 10111000000000000000000000000000 iret
 out_stdout: |
-  source LoC: 83 code instr: 150
+  source LoC: 85 code instr: 150
   ============================================================
   What's your name?
   hello DecafMango

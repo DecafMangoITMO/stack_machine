@@ -1,13 +1,13 @@
 in_source: |
   section .data:
-      a: 1
+      a: 1 
       b: 1
   section .text:
-      lit a
-      push
-      lit b
-      push
-      add
+      lit a ; кладем на стек данных адрес a
+      push ; кладем на стек данных значение a
+      lit b ; кладем на стек данных адрес b
+      push ; кладем на стек данных значение b
+      add ; складываем два числа на верхушке стека
       halt
 in_stdin: |-
   []

@@ -3,17 +3,17 @@ in_source: |
   section .text:
     ei
     .loop:
-        jmp .loop
+        jmp .loop 
 
     .int1:
-        lit in
-        push
+        lit in 
+        push ; считываем символ из порта ввода
         lit 0
-        cmp
-        jz .stop
+        cmp 
+        jz .stop ; если текущий символ - нуль-терминатор, то останов
         drop
         lit out
-        pop
+        pop ; вывод текущего символа в порт вывода
         iret
         .stop:
             halt

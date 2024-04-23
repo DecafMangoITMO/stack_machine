@@ -1,6 +1,6 @@
 # Stack Machine. Транслятор и модель
 
-- Разинкин Александр Владимирович, P3207;
+- Разинкин Александр Владимирович, P3207
 - asm | stack | neum | hw | instr | binary -> struct | trap -> stream | mem | cstr | prob2 | spi
 - Базовый вариант (без усложнения)
 
@@ -31,6 +31,7 @@ variable_name ::= <any of "a-z A-Z _"> { <any of "a-z A-Z 0-9 _"> }
 variable_value ::= integer
                  | string
                  | buffer
+                 | variable_name
                  
 section_text ::= "section .text:" [ comment ] "\n" { command_line }
 
@@ -554,4 +555,13 @@ golden_test.py::test_translator_and_machine[golden/hello_world.yml] PASSED      
 golden_test.py::test_translator_and_machine[golden/add.yml] PASSED                                                                                                       [100%]
 
 ============================================================================== 5 passed in 0.42s ===============================================================================
+```
+
+```text
+| ФИО                             | алг            | LoC | code инстр. | инстр. | такт. |
+| Разинкин Александр Владимирович | add            | 10  | 14          | 5      | 30    |
+| Разинкин Александр Владимирович | cat            | 18  | 21          | 258    | 1133  |
+| Разинкин Александр Владимирович | hello_world    | 23  | 41          | 198    | 994   |
+| Разинкин Александр Владимирович | hello_username | 85  | 150         | 723    | 3668  |
+| Разинкин Александр Владимирович | prob2          | 59  | 71          | 2000   | 9714  |
 ```

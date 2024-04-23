@@ -85,7 +85,7 @@ in_source: |
         pop ; обновляем значение pointer
         iret
 in_stdin: |-
-  [(2001, 'D'), (2002, 'e'), (2003, 'c'), (2004, 'a'), (2005, 'f'), (2006, 'M'), (2207, 'a'), (2208, 'n'), (2209, 'g'), (2210, 'o'), (2411, '')]
+  [(2051, 'D'), (2052, 'e'), (2053, 'c'), (2054, 'a'), (2055, 'f'), (2056, 'M'), (2207, 'a'), (2208, 'n'), (2209, 'g'), (2210, 'o'), (2411, '')]
 out_code: |-
   00000000000000000000000000111011
   00000000000000000000000010000101
@@ -1740,100 +1740,100 @@ out_log: |
   DEBUG   machine:execute_ei    TICK: 2014       PC: 78         TODS1: 0          TODS2: -1         TOAS: 68         Z_FLAG: 0 	ei
   	   DATA_STACK: [0, 0, -1]
   	   ADDRESS_STACK: []
+  DEBUG   machine:execute_jmp   TICK: 2018       PC: 70         TODS1: 70         TODS2: -1         TOAS: 68         Z_FLAG: 0 	jmp 70
+  	   DATA_STACK: [0, 0, -1]
+  	   ADDRESS_STACK: []
+  DEBUG   machine:execute_di    TICK: 2021       PC: 71         TODS1: 70         TODS2: -1         TOAS: 68         Z_FLAG: 0 	di
+  	   DATA_STACK: [0, 0, -1]
+  	   ADDRESS_STACK: []
+  DEBUG   machine:execute_lit   TICK: 2025       PC: 73         TODS1: 0          TODS2: -1         TOAS: 68         Z_FLAG: 0 	lit 0
+  	   DATA_STACK: [0, 0, -1, 0]
+  	   ADDRESS_STACK: []
+  DEBUG   machine:execute_cmp   TICK: 2031       PC: 74         TODS1: 0          TODS2: -1         TOAS: 68         Z_FLAG: 0 	cmp
+  	   DATA_STACK: [0, 0, -1, 0]
+  	   ADDRESS_STACK: []
+  DEBUG   machine:execute_drop  TICK: 2034       PC: 75         TODS1: 0          TODS2: -1         TOAS: 68         Z_FLAG: 0 	drop
+  	   DATA_STACK: [0, 0, -1]
+  	   ADDRESS_STACK: []
+  DEBUG   machine:execute_jz    TICK: 2037       PC: 77         TODS1: 0          TODS2: -1         TOAS: 68         Z_FLAG: 0 	jz 80
+  	   DATA_STACK: [0, 0, -1]
+  	   ADDRESS_STACK: []
+  DEBUG   machine:execute_ei    TICK: 2040       PC: 78         TODS1: 0          TODS2: -1         TOAS: 68         Z_FLAG: 0 	ei
+  	   DATA_STACK: [0, 0, -1]
+  	   ADDRESS_STACK: []
+  DEBUG   machine:execute_jmp   TICK: 2044       PC: 70         TODS1: 70         TODS2: -1         TOAS: 68         Z_FLAG: 0 	jmp 70
+  	   DATA_STACK: [0, 0, -1]
+  	   ADDRESS_STACK: []
+  DEBUG   machine:execute_di    TICK: 2047       PC: 71         TODS1: 70         TODS2: -1         TOAS: 68         Z_FLAG: 0 	di
+  	   DATA_STACK: [0, 0, -1]
+  	   ADDRESS_STACK: []
+  DEBUG   machine:execute_lit   TICK: 2051       PC: 73         TODS1: 0          TODS2: -1         TOAS: 68         Z_FLAG: 0 	lit 0
+  	   DATA_STACK: [0, 0, -1, 0]
+  	   ADDRESS_STACK: []
+  DEBUG   machine:execute_cmp   TICK: 2057       PC: 74         TODS1: 0          TODS2: -1         TOAS: 68         Z_FLAG: 0 	cmp
+  	   DATA_STACK: [0, 0, -1, 0]
+  	   ADDRESS_STACK: []
+  DEBUG   machine:execute_drop  TICK: 2060       PC: 75         TODS1: 0          TODS2: -1         TOAS: 68         Z_FLAG: 0 	drop
+  	   DATA_STACK: [0, 0, -1]
+  	   ADDRESS_STACK: []
+  DEBUG   machine:execute_jz    TICK: 2063       PC: 77         TODS1: 0          TODS2: -1         TOAS: 68         Z_FLAG: 0 	jz 80
+  	   DATA_STACK: [0, 0, -1]
+  	   ADDRESS_STACK: []
+  DEBUG   machine:execute_ei    TICK: 2066       PC: 78         TODS1: 0          TODS2: -1         TOAS: 68         Z_FLAG: 0 	ei
+  	   DATA_STACK: [0, 0, -1]
+  	   ADDRESS_STACK: []
   DEBUG   machine:check_and_handle_interruption START HANDLING INTERRUPTION
-  DEBUG   machine:execute_drop  TICK: 2021       PC: 134        TODS1: -1         TODS2: -1         TOAS: 78         Z_FLAG: 0 	drop
+  DEBUG   machine:execute_drop  TICK: 2073       PC: 134        TODS1: -1         TODS2: -1         TOAS: 78         Z_FLAG: 0 	drop
   	   DATA_STACK: [0, 0]
   	   ADDRESS_STACK: [78]
-  DEBUG   machine:execute_lit   TICK: 2025       PC: 136        TODS1: 2          TODS2: -1         TOAS: 78         Z_FLAG: 0 	lit 2
+  DEBUG   machine:execute_lit   TICK: 2077       PC: 136        TODS1: 2          TODS2: -1         TOAS: 78         Z_FLAG: 0 	lit 2
   	   DATA_STACK: [0, 0, 2]
   	   ADDRESS_STACK: [78]
   DEBUG   machine:signal_read_memory input: 'M'
-  DEBUG   machine:execute_push  TICK: 2031       PC: 137        TODS1: 77         TODS2: -1         TOAS: 137        Z_FLAG: 0 	push
+  DEBUG   machine:execute_push  TICK: 2083       PC: 137        TODS1: 77         TODS2: -1         TOAS: 137        Z_FLAG: 0 	push
   	   DATA_STACK: [0, 0, 77]
   	   ADDRESS_STACK: [78]
-  DEBUG   machine:execute_dup   TICK: 2036       PC: 138        TODS1: 77         TODS2: -1         TOAS: 137        Z_FLAG: 0 	dup
+  DEBUG   machine:execute_dup   TICK: 2088       PC: 138        TODS1: 77         TODS2: -1         TOAS: 137        Z_FLAG: 0 	dup
   	   DATA_STACK: [0, 0, 77, 77]
   	   ADDRESS_STACK: [78]
-  DEBUG   machine:execute_lit   TICK: 2040       PC: 140        TODS1: 58         TODS2: -1         TOAS: 137        Z_FLAG: 0 	lit 58
+  DEBUG   machine:execute_lit   TICK: 2092       PC: 140        TODS1: 58         TODS2: -1         TOAS: 137        Z_FLAG: 0 	lit 58
   	   DATA_STACK: [0, 0, 77, 77, 58]
   	   ADDRESS_STACK: [78]
-  DEBUG   machine:execute_push  TICK: 2046       PC: 141        TODS1: 28         TODS2: -1         TOAS: 141        Z_FLAG: 0 	push
+  DEBUG   machine:execute_push  TICK: 2098       PC: 141        TODS1: 28         TODS2: -1         TOAS: 141        Z_FLAG: 0 	push
   	   DATA_STACK: [0, 0, 77, 77, 28]
   	   ADDRESS_STACK: [78]
-  DEBUG   machine:execute_pop   TICK: 2053       PC: 142        TODS1: 28         TODS2: 77         TOAS: 142        Z_FLAG: 0 	pop
+  DEBUG   machine:execute_pop   TICK: 2105       PC: 142        TODS1: 28         TODS2: 77         TOAS: 142        Z_FLAG: 0 	pop
   	   DATA_STACK: [0, 0, 77]
   	   ADDRESS_STACK: [78]
-  DEBUG   machine:execute_lit   TICK: 2057       PC: 144        TODS1: 58         TODS2: 77         TOAS: 142        Z_FLAG: 0 	lit 58
+  DEBUG   machine:execute_lit   TICK: 2109       PC: 144        TODS1: 58         TODS2: 77         TOAS: 142        Z_FLAG: 0 	lit 58
   	   DATA_STACK: [0, 0, 77, 58]
   	   ADDRESS_STACK: [78]
-  DEBUG   machine:execute_dup   TICK: 2062       PC: 145        TODS1: 58         TODS2: 77         TOAS: 142        Z_FLAG: 0 	dup
+  DEBUG   machine:execute_dup   TICK: 2114       PC: 145        TODS1: 58         TODS2: 77         TOAS: 142        Z_FLAG: 0 	dup
   	   DATA_STACK: [0, 0, 77, 58, 58]
   	   ADDRESS_STACK: [78]
-  DEBUG   machine:execute_push  TICK: 2068       PC: 146        TODS1: 28         TODS2: 77         TOAS: 146        Z_FLAG: 0 	push
+  DEBUG   machine:execute_push  TICK: 2120       PC: 146        TODS1: 28         TODS2: 77         TOAS: 146        Z_FLAG: 0 	push
   	   DATA_STACK: [0, 0, 77, 58, 28]
   	   ADDRESS_STACK: [78]
-  DEBUG   machine:execute_unary_math_instruction TICK: 2073       PC: 147        TODS1: 29         TODS2: 77         TOAS: 146        Z_FLAG: 0 	inc
+  DEBUG   machine:execute_unary_math_instruction TICK: 2125       PC: 147        TODS1: 29         TODS2: 77         TOAS: 146        Z_FLAG: 0 	inc
   	   DATA_STACK: [0, 0, 77, 58, 29]
   	   ADDRESS_STACK: [78]
-  DEBUG   machine:execute_switch TICK: 2079       PC: 148        TODS1: 29         TODS2: 58         TOAS: 146        Z_FLAG: 0 	switch
+  DEBUG   machine:execute_switch TICK: 2131       PC: 148        TODS1: 29         TODS2: 58         TOAS: 146        Z_FLAG: 0 	switch
   	   DATA_STACK: [0, 0, 77, 29, 58]
   	   ADDRESS_STACK: [78]
-  DEBUG   machine:execute_pop   TICK: 2086       PC: 149        TODS1: 58         TODS2: 29         TOAS: 149        Z_FLAG: 0 	pop
+  DEBUG   machine:execute_pop   TICK: 2138       PC: 149        TODS1: 58         TODS2: 29         TOAS: 149        Z_FLAG: 0 	pop
   	   DATA_STACK: [0, 0, 77]
   	   ADDRESS_STACK: [78]
-  DEBUG   machine:execute_iret  TICK: 2090       PC: 78         TODS1: 58         TODS2: 29         TOAS: 78         Z_FLAG: 0 	iret
+  DEBUG   machine:execute_iret  TICK: 2142       PC: 78         TODS1: 58         TODS2: 29         TOAS: 78         Z_FLAG: 0 	iret
   	   DATA_STACK: [0, 0, 77]
   	   ADDRESS_STACK: []
   DEBUG   machine:execute_iret  STOP HANDLING INTERRUPTION
-  DEBUG   machine:execute_jmp   TICK: 2094       PC: 70         TODS1: 70         TODS2: 29         TOAS: 78         Z_FLAG: 0 	jmp 70
+  DEBUG   machine:execute_jmp   TICK: 2146       PC: 70         TODS1: 70         TODS2: 29         TOAS: 78         Z_FLAG: 0 	jmp 70
   	   DATA_STACK: [0, 0, 77]
   	   ADDRESS_STACK: []
-  DEBUG   machine:execute_di    TICK: 2097       PC: 71         TODS1: 70         TODS2: 29         TOAS: 78         Z_FLAG: 0 	di
+  DEBUG   machine:execute_di    TICK: 2149       PC: 71         TODS1: 70         TODS2: 29         TOAS: 78         Z_FLAG: 0 	di
   	   DATA_STACK: [0, 0, 77]
   	   ADDRESS_STACK: []
-  DEBUG   machine:execute_lit   TICK: 2101       PC: 73         TODS1: 0          TODS2: 29         TOAS: 78         Z_FLAG: 0 	lit 0
-  	   DATA_STACK: [0, 0, 77, 0]
-  	   ADDRESS_STACK: []
-  DEBUG   machine:execute_cmp   TICK: 2107       PC: 74         TODS1: 0          TODS2: 77         TOAS: 78         Z_FLAG: 0 	cmp
-  	   DATA_STACK: [0, 0, 77, 0]
-  	   ADDRESS_STACK: []
-  DEBUG   machine:execute_drop  TICK: 2110       PC: 75         TODS1: 0          TODS2: 77         TOAS: 78         Z_FLAG: 0 	drop
-  	   DATA_STACK: [0, 0, 77]
-  	   ADDRESS_STACK: []
-  DEBUG   machine:execute_jz    TICK: 2113       PC: 77         TODS1: 0          TODS2: 77         TOAS: 78         Z_FLAG: 0 	jz 80
-  	   DATA_STACK: [0, 0, 77]
-  	   ADDRESS_STACK: []
-  DEBUG   machine:execute_ei    TICK: 2116       PC: 78         TODS1: 0          TODS2: 77         TOAS: 78         Z_FLAG: 0 	ei
-  	   DATA_STACK: [0, 0, 77]
-  	   ADDRESS_STACK: []
-  DEBUG   machine:execute_jmp   TICK: 2120       PC: 70         TODS1: 70         TODS2: 77         TOAS: 78         Z_FLAG: 0 	jmp 70
-  	   DATA_STACK: [0, 0, 77]
-  	   ADDRESS_STACK: []
-  DEBUG   machine:execute_di    TICK: 2123       PC: 71         TODS1: 70         TODS2: 77         TOAS: 78         Z_FLAG: 0 	di
-  	   DATA_STACK: [0, 0, 77]
-  	   ADDRESS_STACK: []
-  DEBUG   machine:execute_lit   TICK: 2127       PC: 73         TODS1: 0          TODS2: 77         TOAS: 78         Z_FLAG: 0 	lit 0
-  	   DATA_STACK: [0, 0, 77, 0]
-  	   ADDRESS_STACK: []
-  DEBUG   machine:execute_cmp   TICK: 2133       PC: 74         TODS1: 0          TODS2: 77         TOAS: 78         Z_FLAG: 0 	cmp
-  	   DATA_STACK: [0, 0, 77, 0]
-  	   ADDRESS_STACK: []
-  DEBUG   machine:execute_drop  TICK: 2136       PC: 75         TODS1: 0          TODS2: 77         TOAS: 78         Z_FLAG: 0 	drop
-  	   DATA_STACK: [0, 0, 77]
-  	   ADDRESS_STACK: []
-  DEBUG   machine:execute_jz    TICK: 2139       PC: 77         TODS1: 0          TODS2: 77         TOAS: 78         Z_FLAG: 0 	jz 80
-  	   DATA_STACK: [0, 0, 77]
-  	   ADDRESS_STACK: []
-  DEBUG   machine:execute_ei    TICK: 2142       PC: 78         TODS1: 0          TODS2: 77         TOAS: 78         Z_FLAG: 0 	ei
-  	   DATA_STACK: [0, 0, 77]
-  	   ADDRESS_STACK: []
-  DEBUG   machine:execute_jmp   TICK: 2146       PC: 70         TODS1: 70         TODS2: 77         TOAS: 78         Z_FLAG: 0 	jmp 70
-  	   DATA_STACK: [0, 0, 77]
-  	   ADDRESS_STACK: []
-  DEBUG   machine:execute_di    TICK: 2149       PC: 71         TODS1: 70         TODS2: 77         TOAS: 78         Z_FLAG: 0 	di
-  	   DATA_STACK: [0, 0, 77]
-  	   ADDRESS_STACK: []
-  DEBUG   machine:execute_lit   TICK: 2153       PC: 73         TODS1: 0          TODS2: 77         TOAS: 78         Z_FLAG: 0 	lit 0
+  DEBUG   machine:execute_lit   TICK: 2153       PC: 73         TODS1: 0          TODS2: 29         TOAS: 78         Z_FLAG: 0 	lit 0
   	   DATA_STACK: [0, 0, 77, 0]
   	   ADDRESS_STACK: []
   DEBUG   machine:execute_cmp   TICK: 2159       PC: 74         TODS1: 0          TODS2: 77         TOAS: 78         Z_FLAG: 0 	cmp

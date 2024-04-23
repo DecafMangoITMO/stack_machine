@@ -13,7 +13,7 @@ from isa import (
     read_code,
 )
 
-INSTRUCTION_LIMIT = 1000
+INSTRUCTION_LIMIT = 1500
 
 ALU_OPCODE_BINARY_HANDLERS = {
     Opcode.ADD: lambda left, right: int(left + right),
@@ -578,15 +578,14 @@ class ControlUnit:
 
 def initiate_interruption(control_unit, input_tokens):
     if len(input_tokens) != 0:
-        if not control_unit.data_path.interruption_controller.interruption:
-            next_token = input_tokens[0]
-            if control_unit.tick_counter >= next_token[0]:
-                control_unit.data_path.interruption_controller.generate_interruption(1)
-                if next_token[1]:
-                    control_unit.data_path.input_buffer = ord(next_token[1])
-                else:
-                    control_unit.data_path.input_buffer = 0
-                return input_tokens[1:]
+        next_token = input_tokens[0]
+        if control_unit.tick_counter >= next_token[0]:
+            control_unit.data_path.interruption_controller.generate_interruption(1)
+            if next_token[1]:
+                control_unit.data_path.input_buffer = ord(next_token[1])
+            else:
+                control_unit.data_path.input_buffer = 0
+            return input_tokens[1:]
     return input_tokens
 
 

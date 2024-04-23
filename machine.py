@@ -13,7 +13,7 @@ from isa import (
     read_code,
 )
 
-INSTRUCTION_LIMIT = 2000
+INSTRUCTION_LIMIT = 1000
 
 ALU_OPCODE_BINARY_HANDLERS = {
     Opcode.ADD: lambda left, right: int(left + right),

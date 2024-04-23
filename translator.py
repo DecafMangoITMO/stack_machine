@@ -139,7 +139,9 @@ def translate_variables(variables, address, code, commented_code, char_for_index
     for variable in variables.values():
         if variable.name in ["in", "out"]:
             code.append(value_to_binary32(0))
-            commented_code.append(f"{address}{" " * (char_for_index - len(str(address)))} {value_to_binary32(0)}")
+            commented_code.append(
+                f"{address}{" " * (char_for_index - len(str(address)))} {value_to_binary32(0)} {variable.name}_port"
+            )
             address += 1
             continue
         for cell in variable.data:
@@ -199,14 +201,14 @@ def translate_source(source):
     )  # Нужно для выравнивания индексов машинных слов в коде с комментариями
 
     code = [value_to_binary32(section_text_address)]
-    commented_code = [f"0{" " * (char_for_index - 1)} {value_to_binary32(section_text_address)}"]
+    commented_code = [f"0{" " * (char_for_index - 1)} {value_to_binary32(section_text_address)} start_address"]
 
     if INTERRUPTION_1 in labels:
         code.append(value_to_binary32(labels[INTERRUPTION_1]))
-        commented_code.append(f"1{" " * (char_for_index - 1)} {value_to_binary32(labels[INTERRUPTION_1])}")
+        commented_code.append(f"1{" " * (char_for_index - 1)} {value_to_binary32(labels[INTERRUPTION_1])} int_vector_1")
     else:
         code.append(value_to_binary32(0))
-        commented_code.append(f"1{" " * (char_for_index - 1)} {value_to_binary32(0)}")
+        commented_code.append(f"1{" " * (char_for_index - 1)} {value_to_binary32(0)} int_vector_1")
 
     address = 2
     code, commented_code, address = translate_variables(variables, address, code, commented_code, char_for_index)
